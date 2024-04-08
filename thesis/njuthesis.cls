@@ -1,1168 +1,1966 @@
-%% 模板类文件
-\NeedsTeXFormat{LaTeX2e}[1995/12/01]
-\ProvidesClass{njuthesis.cls}
- [2015/7/16 v1.1.18 Document Class for the Degree Papers of Nanjing University]
-\newif\ifnjut@adobefonts\njut@adobefontstrue
-\newif\ifnjut@winfonts\njut@winfontsfalse
-\newif\ifnjut@linuxfonts\njut@linuxfontsfalse
-\newif\ifnjut@macfonts\njut@macfontsfalse
-\newif\ifnjut@backinfo\njut@backinfotrue
-\newif\ifnjut@phd\njut@phdfalse
-\newif\ifnjut@master\njut@masterfalse
-\newif\ifnjut@bachelor\njut@bachelorfalse
-\DeclareOption{adobefonts}{\njut@adobefontstrue
-  \njut@winfontsfalse
-  \njut@linuxfontsfalse
-  \njut@macfontsfalse}
-\DeclareOption{winfonts}{\njut@winfontstrue
-  \njut@adobefontsfalse
-  \njut@linuxfontsfalse
-  \njut@macfontsfalse}
-\DeclareOption{linuxfonts}{\njut@linuxfontstrue
-  \njut@adobefontsfalse
-  \njut@winfontsfalse
-  \njut@macfontsfalse}
-\DeclareOption{macfonts}{\njut@macfontstrue
-  \njut@adobefontsfalse
-  \njut@winfontsfalse
-  \njut@linuxfontsfalse}
-\DeclareOption{nobackinfo}{\njut@backinfofalse}
-\DeclareOption{phd}{\njut@phdtrue
-  \njut@masterfalse
-  \njut@bachelorfalse}
-\DeclareOption{master}{\njut@mastertrue
-  \njut@phdfalse
-  \njut@bachelorfalse}
-\DeclareOption{bachelor}{\njut@bachelortrue
-  \njut@phdfalse
-  \njut@masterfalse}
-\DeclareOption*{\PassOptionsToClass{\CurrentOption}{book}}
-\ProcessOptions\relax
-\LoadClass[12pt,a4paper,doubleside]{book}
-\RequirePackage{ifxetex}
-\RequireXeTeX
-\RequirePackage{lastpage}
-\RequirePackage{geometry}
-\RequirePackage{titlesec}
-\RequirePackage{graphicx}
-\DeclareGraphicsExtensions{.pdf,.eps,.jpg,.png}
-\RequirePackage{caption}
-\RequirePackage{float}
-%% \RequirePackage{subfig} %% 有bug暂时用不了subfig, 用subcaption代替
-\RequirePackage{subcaption}
-\RequirePackage{array}
-\RequirePackage{longtable}
-\RequirePackage{booktabs}
-\RequirePackage{multirow}
-\RequirePackage{enumitem}
-\RequirePackage{xcolor}
-\RequirePackage{lipsum}
-\RequirePackage{listings}
-\RequirePackage{titlesec}
-\RequirePackage{titletoc}
-\RequirePackage{amsmath}
-\RequirePackage{amsthm}
-\RequirePackage{amsfonts}
-\RequirePackage{amssymb}
-\RequirePackage{bm}
-%%\RequirePackage{mathrsfs}
-\RequirePackage{wasysym}
-\RequirePackage{pifont}
-\RequirePackage{txfonts}
-\RequirePackage{setspace}
-\RequirePackage{fancyhdr}
-\RequirePackage{shortvrb}
-\RequirePackage{xltxtra}
-\RequirePackage{xstring}
-\RequirePackage[CJKnumber,CJKchecksingle]{xeCJK}
-\RequirePackage{CJKnumb}
-\defaultfontfeatures{Mapping=tex-text}
-\punctstyle{plain}
-\RequirePackage{CJKfntef}
-\RequirePackage{ulem}
-%\renewcommand*{\CJKunderlinecolor}{\color{black}}
-\RequirePackage[hyphens]{url}
-\RequirePackage{hyperref}
-\hypersetup{%
-    unicode=false,
-    hyperfootnotes=true,
-    hyperindex=true,
-    pageanchor=true,
-    CJKbookmarks=true,
-    bookmarksnumbered=true,
-    bookmarksopen=true,
-    bookmarksopenlevel=0,
-    breaklinks=true,
-    colorlinks=false,
-    plainpages=false,
-    pdfpagelabels,
-    pdfborder=0 0 0%
-}
-\urlstyle{same}
-\RequirePackage[sort&compress,numbers]{natbib}
-\RequirePackage{hypernat}
-\RequirePackage{tabularx}
-\RequirePackage{makeidx}
-\RequirePackage{glossaries}
-\RequirePackage{ifthen}
-\RequirePackage[perpage,symbol*]{footmisc}
-\input{njuthesis.cfg}
-\ifnjut@adobefonts
-  \newcommand*{\njut@zhfn@songti}{\njut@zhfn@songti@adobe}
-  \newcommand*{\njut@zhfn@heiti}{\njut@zhfn@heiti@adobe}
-  \newcommand*{\njut@zhfn@kaishu}{\njut@zhfn@kaishu@adobe}
-  \newcommand*{\njut@zhfn@fangsong}{\njut@zhfn@fangsong@adobe}
-  \newcommand*{\njut@enfn@main}{\njut@enfn@main@adobe}
-  \newcommand*{\njut@enfn@sans}{\njut@enfn@sans@adobe}
-  \newcommand*{\njut@enfn@mono}{\njut@enfn@mono@adobe}
-\else
-  \ifnjut@winfonts
-      \newcommand*{\njut@zhfn@songti}{\njut@zhfn@songti@win}
-      \newcommand*{\njut@zhfn@heiti}{\njut@zhfn@heiti@win}
-      \newcommand*{\njut@zhfn@kaishu}{\njut@zhfn@kaishu@win}
-      \newcommand*{\njut@zhfn@fangsong}{\njut@zhfn@fangsong@win}
-      \newcommand*{\njut@enfn@main}{\njut@enfn@main@win}
-      \newcommand*{\njut@enfn@sans}{\njut@enfn@sans@win}
-      \newcommand*{\njut@enfn@mono}{\njut@enfn@mono@win}
-  \else
-    \ifnjut@linuxfonts
-      \newcommand*{\njut@zhfn@songti}{\njut@zhfn@songti@linux}
-      \newcommand*{\njut@zhfn@heiti}{\njut@zhfn@heiti@linux}
-      \newcommand*{\njut@zhfn@kaishu}{\njut@zhfn@kaishu@linux}
-      \newcommand*{\njut@zhfn@fangsong}{\njut@zhfn@fangsong@linux}
-      \newcommand*{\njut@enfn@main}{\njut@enfn@main@linux}
-      \newcommand*{\njut@enfn@sans}{\njut@enfn@sans@linux}
-      \newcommand*{\njut@enfn@mono}{\njut@enfn@mono@linux}
-    \else
-       \ifnjut@macfonts
-          \newcommand*{\njut@zhfn@songti}{\njut@zhfn@songti@mac}
-          \newcommand*{\njut@zhfn@heiti}{\njut@zhfn@heiti@mac}
-          \newcommand*{\njut@zhfn@kaishu}{\njut@zhfn@kaishu@mac}
-          \newcommand*{\njut@zhfn@fangsong}{\njut@zhfn@fangsong@mac}
-          \newcommand*{\njut@enfn@main}{\njut@enfn@main@mac}
-          \newcommand*{\njut@enfn@sans}{\njut@enfn@sans@mac}
-          \newcommand*{\njut@enfn@mono}{\njut@enfn@mono@mac}
-       \else
-         \ClassError{njuthesis}{No fonts was selected.}{}
-       \fi
-    \fi
-  \fi
-\fi
-\setCJKfamilyfont{song}{\njut@zhfn@songti}
-\setCJKfamilyfont{hei}{\njut@zhfn@heiti}
-\setCJKfamilyfont{kai}{\njut@zhfn@kaishu}
-\setCJKfamilyfont{fangsong}{\njut@zhfn@fangsong}
-\setCJKmainfont[BoldFont={\njut@zhfn@heiti},%
-                ItalicFont={\njut@zhfn@kaishu}]%
-               {\njut@zhfn@songti}
-\setCJKsansfont{\njut@zhfn@heiti}
-\setCJKmonofont{\njut@zhfn@fangsong}
-\setmainfont{\njut@enfn@main}
-\setsansfont{\njut@enfn@sans}
-\setmonofont{\njut@enfn@mono}
-\newcommand*{\songti}{\CJKfamily{song}}
-\newcommand*{\heiti}{\CJKfamily{hei}}
-\newcommand*{\kaishu}{\CJKfamily{kai}}
-\newcommand*{\fangsong}{\CJKfamily{fangsong}}
-\newcommand*{\njut@fs@eight}{5.02} % 八号字 5bp
-\newcommand*{\njut@fs@eightskip}{6.02}
-\newcommand*{\njut@fs@seven}{5.52} % 七号字 5.5bp
-\newcommand*{\njut@fs@sevenskip}{6.62}
-\newcommand*{\njut@fs@ssix}{6.52} % 小六号 6.5bp
-\newcommand*{\njut@fs@ssixskip}{7.83}
-\newcommand*{\njut@fs@six}{7.53} % 六号字 7.5bp
-\newcommand*{\njut@fs@sixskip}{9.03}
-\newcommand*{\njut@fs@sfive}{9.03} % 小五号 9bp
-\newcommand*{\njut@fs@sfiveskip}{10.84}
-\newcommand*{\njut@fs@five}{10.54} % 五号 10bp
-\newcommand*{\njut@fs@fiveskip}{12.65}
-\newcommand*{\njut@fs@sfour}{12.05} % 小四号 12bp
-\newcommand*{\njut@fs@sfourskip}{14.45}
-\newcommand*{\njut@fs@four}{14.05} % 四号字 14bp
-\newcommand*{\njut@fs@fourskip}{16.86}
-\newcommand*{\njut@fs@sthree}{15.06} % 小三号 15bp
-\newcommand*{\njut@fs@sthreeskip}{18.07}
-\newcommand*{\njut@fs@three}{16.06} % 三号字 16bp
-\newcommand*{\njut@fs@threeskip}{19.27}
-\newcommand*{\njut@fs@stwo}{18.07} % 小二号 18bp
-\newcommand*{\njut@fs@stwoskip}{21.68}
-\newcommand*{\njut@fs@two}{22.08} % 二号字 22bp
-\newcommand*{\njut@fs@twoskip}{26.50}
-\newcommand*{\njut@fs@sone}{24.09} % 小一号 24bp
-\newcommand*{\njut@fs@soneskip}{28.91}
-\newcommand*{\njut@fs@one}{26.10} % 一号字 26bp
-\newcommand*{\njut@fs@oneskip}{31.32}
-\newcommand*{\njut@fs@szero}{36.14} % 小初号 36bp
-\newcommand*{\njut@fs@szeroskip}{43.36}
-\newcommand*{\njut@fs@zero}{42.16} % 初号字 42bp
-\newcommand*{\njut@fs@zeroskip}{50.59}
-\DeclareMathSizes{\njut@fs@eight}
-                 {\njut@fs@eight}
-                 {5}
-                 {5}
-\DeclareMathSizes{\njut@fs@seven}
-                 {\njut@fs@seven}
-                 {5}
-                 {5}
-\DeclareMathSizes{\njut@fs@ssix}
-                 {\njut@fs@ssix}
-                 {5}
-                 {5}
-\DeclareMathSizes{\njut@fs@six}
-                 {\njut@fs@six}
-                 {5}
-                 {5}
-\DeclareMathSizes{\njut@fs@sfive}
-                 {\njut@fs@sfive}
-                 {6}
-                 {5}
-\DeclareMathSizes{\njut@fs@five}
-                 {\njut@fs@five}
-                 {7}
-                 {5}
-\DeclareMathSizes{\njut@fs@sfour}
-                 {\njut@fs@sfour}
-                 {8}
-                 {6}
-\DeclareMathSizes{\njut@fs@four}
-                 {\njut@fs@four}
-                 {\njut@fs@five}
-                 {\njut@fs@six}
-\DeclareMathSizes{\njut@fs@sthree}
-                 {\njut@fs@sthree}
-                 {\njut@fs@sfour}
-                 {\njut@fs@sfive}
-\DeclareMathSizes{\njut@fs@three}
-                 {\njut@fs@three}
-                 {\njut@fs@four}
-                 {\njut@fs@five}
-\DeclareMathSizes{\njut@fs@stwo}
-                 {\njut@fs@stwo}
-                 {\njut@fs@sthree}
-                 {\njut@fs@sfour}
-\DeclareMathSizes{\njut@fs@two}
-                 {\njut@fs@two}
-                 {\njut@fs@three}
-                 {\njut@fs@four}
-\DeclareMathSizes{\njut@fs@sone}
-                 {\njut@fs@sone}
-                 {\njut@fs@stwo}
-                 {\njut@fs@sthree}
-\DeclareMathSizes{\njut@fs@one}
-                 {\njut@fs@one}
-                 {\njut@fs@two}
-                 {\njut@fs@three}
-\DeclareMathSizes{\njut@fs@szero}
-                 {\njut@fs@szero}
-                 {\njut@fs@sone}
-                 {\njut@fs@stwo}
-\DeclareMathSizes{\njut@fs@zero}
-                 {\njut@fs@zero}
-                 {\njut@fs@one}
-                 {\njut@fs@two}
-\def\njut@zihao{}
-\DeclareRobustCommand*{\zihao}[1]{%
-  \def\njut@zihao{#1}%
-  \ifnum #11<0%
-    \@tempcnta=-#1
-    \ifcase\@tempcnta%
-        \fontsize\njut@fs@szero\njut@fs@szeroskip%
-    \or \fontsize\njut@fs@sone\njut@fs@soneskip%
-    \or \fontsize\njut@fs@stwo\njut@fs@stwoskip%
-    \or \fontsize\njut@fs@sthree\njut@fs@sthreeskip%
-    \or \fontsize\njut@fs@sfour\njut@fs@sfourskip%
-    \or \fontsize\njut@fs@sfive\njut@fs@sfiveskip%
-    \or \fontsize\njut@fs@ssix\njut@fs@ssixskip%
-    \else \ClassError{njuthesis}{%
-            Undefined Chinese font size in command \protect\zihao}{%
-            The old font size is used if you continue.}%
-    \fi%
-  \else%
-    \@tempcnta=#1
-    \ifcase\@tempcnta%
-        \fontsize\njut@fs@zero\njut@fs@zeroskip%
-    \or \fontsize\njut@fs@one\njut@fs@oneskip%
-    \or \fontsize\njut@fs@two\njut@fs@twoskip%
-    \or \fontsize\njut@fs@three\njut@fs@threeskip%
-    \or \fontsize\njut@fs@four\njut@fs@fourskip%
-    \or \fontsize\njut@fs@five\njut@fs@fiveskip%
-    \or \fontsize\njut@fs@six\njut@fs@sixskip%
-    \or \fontsize\njut@fs@seven\njut@fs@sevenskip%
-    \or \fontsize\njut@fs@eight\njut@fs@eightskip%
-    \else \ClassError{njuthesis}{%
-            Undefined Chinese font size in command \protect\zihao}{%
-            The old font size is used if you continue.}%
-    \fi%
-  \fi%
-  \selectfont\ignorespaces}
-\renewcommand{\tiny}{% 小六号 6.5bp
-  \@setfontsize\tiny{\njut@fs@ssix}{\njut@fs@ssixskip}}
-\renewcommand{\scriptsize}{% 六号字 7.5bp
-  \@setfontsize\scriptsize{\njut@fs@six}{\njut@fs@sixskip}}
-\renewcommand{\footnotesize}{% 小五号 9bp
-  \@setfontsize\footnotesize{\njut@fs@sfive}{\njut@fs@sfiveskip}%
-  \abovedisplayskip 6\p@ \@plus2\p@ \@minus4\p@
-  \abovedisplayshortskip \z@ \@plus\p@
-  \belowdisplayshortskip 3\p@ \@plus\p@ \@minus2\p@
-  \def\@listi{\leftmargin\leftmargini
-    \topsep 3\p@ \@plus\p@ \@minus\p@
-    \parsep 2\p@ \@plus\p@ \@minus\p@
-    \itemsep \parsep}%
-  \belowdisplayskip \abovedisplayskip}
-\renewcommand{\small}{% 五号 10bp
-  \@setfontsize\small{\njut@fs@five}{\njut@fs@fiveskip}%
-  \abovedisplayskip 8.5\p@ \@plus3\p@ \@minus4\p@
-  \abovedisplayshortskip \z@ \@plus2\p@
-  \belowdisplayshortskip 4\p@ \@plus2\p@ \@minus2\p@
-  \def\@listi{\leftmargin\leftmargini
-    \topsep 4\p@ \@plus2\p@ \@minus2\p@
-    \parsep 2\p@ \@plus\p@ \@minus\p@
-    \itemsep \parsep}%
-  \belowdisplayskip \abovedisplayskip}
-\renewcommand{\normalsize}{% 小四号 12bp
-  \@setfontsize\normalsize{\njut@fs@sfour}{\njut@fs@sfourskip}%
-  \abovedisplayskip 10\p@ \@plus2\p@ \@minus5\p@
-  \abovedisplayshortskip \z@ \@plus3\p@
-  \belowdisplayshortskip 6\p@ \@plus3\p@ \@minus3\p@
-  \belowdisplayskip \abovedisplayskip
-  \let\@listi\@listI}
-\renewcommand{\large}{% 小三号 15bp
-  \@setfontsize\large{\njut@fs@sthree}{\njut@fs@sthreeskip}}
-\renewcommand{\Large}{% 小二号 18bp
-  \@setfontsize\Large{\njut@fs@stwo}{\njut@fs@stwoskip}}
-\renewcommand{\LARGE}{% 小一号 24bp
-  \@setfontsize\LARGE{\njut@fs@sone}{\njut@fs@soneskip}}
-\renewcommand{\huge}{% 一号 26bp
-  \@setfontsize\huge{\njut@fs@one}{\njut@fs@oneskip}}
-\renewcommand{\Huge}{% 小初号 36bp
-  \@setfontsize\Huge{\njut@fs@szero}{\njut@fs@szeroskip}}
-\newcommand*{\ziju}[1]{\renewcommand*{\CJKglue}{\hskip {#1}}}
-\renewcommand{\textsc}[1]{{\usefont{OT1}{cmr}{m}{sc}{#1}}}
-\newcommand{\dashnumber}[2]%
-  {{#1}\kern.07em\rule[.5ex]{.4em}{.15ex}\kern.07em{#2}}
-\renewcommand*{\thefigure}{\dashnumber{\thechapter}{\arabic{figure}}}
-\renewcommand*{\thetable}{\dashnumber{\thechapter}{\arabic{table}}}
-\renewcommand*{\theequation}{\dashnumber{\thechapter}{\arabic{equation}}}
-\renewcommand*{\thesubfigure}{(\alph{subfigure})}
-\renewcommand*{\thesubtable}{(\alph{subtable})}
-\newtheoremstyle{plain}% name
-                {1em}%      Space above, empty = `usual value'
-                {1em}%      Space below
-                {\normalfont}% Body font
-                {}%         Indent amount
-                {\normalfont\bfseries}% Thm head font
-                {}%         Punctuation after thm head
-                {1em}%      Space after thm head: \newline = linebreak
-                {}%         Thm head spec
-\newtheorem{definition}{\njut@cap@definition}[chapter]
-\newtheorem{notation}[definition]{\njut@cap@notation}
-\newtheorem{theorem}{\njut@cap@theorem}[chapter]
-\newtheorem{lemma}[theorem]{\njut@cap@lemma}
-\newtheorem{corollary}[theorem]{\njut@cap@corollary}
-\newtheorem{proposition}[theorem]{\njut@cap@proposition}
-\newtheorem{fact}[theorem]{\njut@cap@fact}
-\newtheorem{assumption}[theorem]{\njut@cap@assumption}
-\newtheorem{conjecture}[theorem]{\njut@cap@conjecture}
-\newtheorem{hypothesis}{\njut@cap@hypothesis}[chapter]
-\newtheorem{axiom}{\njut@cap@axiom}[chapter]
-\newtheorem{postulate}{\njut@cap@postulate}[chapter]
-\newtheorem{principle}{\njut@cap@principle}[chapter]
-\newtheorem{problem}{\njut@cap@problem}[chapter]
-\newtheorem{exercise}{\njut@cap@exercise}[chapter]
-\newtheorem{example}{\njut@cap@example}[chapter]
-\newtheorem{remark}{\njut@cap@remark}[chapter]
+%%
+%% This is file `njuthesis.cls',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% njuthesis.dtx  (with options: `class')
+%% 
+%% Copyright (C) 2021 - 2024
+%% by Nanjing University Linux User Group
+%% <git+nju-lug-email-3104-issue-@yaoge123.cn>
+%% 
+%% This file may be distributed and/or modified under the conditions of
+%% the LaTeX Project Public License, either version 1.3c of this license
+%% or (at your option) any later version.  The latest version of this
+%% license is in:
+%% 
+%%   http://www.latex-project.org/lppl.txt
+%% 
+%% and version 1.3 or later is part of all distributions of LaTeX version
+%% 2005/12/01 or later.
+%% 
+%% To produce the documentation run the original source files ending with
+%% `.dtx' through XeTeX.
+%% 
+\NeedsTeXFormat{LaTeX2e}
+\GetIdInfo $Id: njuthesis.dtx 1.4.0 2024-03-19 20:30:00
+  +0800 NJU LUG <git+nju-lug-email-3104-issue-@yaoge123.cn>$
+  {Thesis template for Nanjing University}
+\ProvidesExplClass{njuthesis}
+  {\ExplFileDate}{\ExplFileVersion}{\ExplFileDescription}
 
-\renewenvironment{proof}[1][\njut@cap@proof]{\par
-  \pushQED{\qed}%
-  \normalfont \topsep6\p@\@plus6\p@\relax
-  \trivlist
-  \item[\hskip\labelsep\textbf{#1}\@addpunct{:}]\ignorespaces
-}{\popQED\endtrivlist\@endpefalse}
-
-\newenvironment{solution}[1][\njut@cap@solution]{\par
-  \normalfont \topsep6\p@\@plus6\p@\relax
-  \trivlist
-  \item[\hskip\labelsep\textbf{#1}\@addpunct{:}]\ignorespaces
-}{\endtrivlist\@endpefalse}
-
-\newtheorem{algorithm}{\njut@cap@algorithm}[chapter] %算法标号使用章节号，否则注释该行即可
-%algorithm seudocode
-\RequirePackage{algorithm}
-\RequirePackage{algorithmic}
-\renewcommand{\algorithmicrequire}{ \textbf{输入:}}
-\renewcommand{\algorithmicensure}{ \textbf{输出:}}
-\floatname{algorithm}{算法}
-
-\renewcommand*{\thedefinition}{\dashnumber{\thechapter}{\arabic{definition}}}
-\renewcommand*{\thetheorem}{\dashnumber{\thechapter}{\arabic{theorem}}}
-\renewcommand*{\theaxiom}{\dashnumber{\thechapter}{\arabic{axiom}}}
-\renewcommand*{\theproblem}{\dashnumber{\thechapter}{\arabic{problem}}}
-\renewcommand*{\theexercise}{\dashnumber{\thechapter}{\arabic{exercise}}}
-\renewcommand*{\theexample}{\dashnumber{\thechapter}{\arabic{example}}}
-\renewcommand*{\theremark}{\dashnumber{\thechapter}{\arabic{remark}}}
-\renewcommand*{\textfraction}{0.05}
-\renewcommand*{\topfraction}{0.9}
-\renewcommand*{\bottomfraction}{0.8}
-\renewcommand*{\floatpagefraction}{0.85}
-\newcommand*{\abstractname}{\njut@cap@abstractname}
-\renewcommand*{\contentsname}{\njut@cap@contentsname}
-\renewcommand*{\listfigurename}{\njut@cap@listfigurename}
-\renewcommand*{\listtablename}{\njut@cap@listtablename}
-\newcommand*{\listsymbolname}{\njut@cap@listsymbolname}
-\newcommand*{\listequationname}{\njut@cap@listequationname}
-\renewcommand*{\glossaryname}{\njut@cap@glossaryname}
-\renewcommand*{\indexname}{\njut@cap@indexname}
-\newcommand*{\equationname}{\njut@cap@equationname}
-\renewcommand*{\bibname}{\njut@cap@bibname}
-\renewcommand*{\figurename}{\njut@cap@figurename}
-\renewcommand*{\tablename}{\njut@cap@tablename}
-\renewcommand*{\chaptername}{\njut@cap@chaptername}
-\renewcommand*{\appendixname}{\njut@cap@appendixname}
-\titleformat{\chapter}[hang]
-            {\centering\zihao{1}\bfseries}
-            {\chaptertitlename}{1em}{}
-\titlespacing{\chapter}
-             {0pt}
-             {*4}
-             {*3}
-\titleformat{\section}[hang]
-            {\zihao{-2}\bfseries}
-            {\thesection}{1em}{}
-\titlespacing{\section}
-             {0pt}
-             {*3.5}
-             {*2.3}
-\titleformat{\subsection}[hang]
-            {\zihao{3}\bfseries}
-            {\thesubsection}{1em}{}
-\titlespacing{\subsection}
-             {0pt}
-             {*3}
-             {*1.5}
-\titleformat{\subsubsection}[hang]
-            {\zihao{-3}\bfseries}
-            {\thesubsubsection}{1em}{}
-\titlespacing{\subsubsection}
-             {0pt}
-             {*2.5}
-             {*1.5}
-\titleformat{\paragraph}[hang]
-            {\zihao{4}\bfseries}
-            {}{0em}{}
-\titlespacing{\paragraph}
-             {0pt}
-             {*2}
-             {*1}
-\titleformat{\subparagraph}[hang]
-            {\zihao{-4}\bfseries}
-            {}{0em}{}
-\titlespacing{\subparagraph}
-             {0pt}
-             {*1.5}
-             {*1}
-\setcounter{secnumdepth}{4}
-\renewcommand{\thechapter}{\arabic{chapter}}
-\renewcommand{\thesection}{\thechapter\thinspace.\thinspace\arabic{section}}
-\renewcommand{\thesubsection}{\thesection\thinspace.\thinspace\arabic{subsection}}
-\renewcommand{\thesubsubsection}{\thesubsection\thinspace.\thinspace\arabic{subsubsection}}
-\captionsetup{font=small}
-\captionsetup[table]{position=above}
-\captionsetup[figure]{position=below}
-\floatstyle{plaintop}
-\restylefloat{table}
-\renewcommand*{\baselinestretch}{1.38}
-\let\convertergy@oldtabular\tabular
-\let\convertergy@endoldtabular\endtabular
-\renewenvironment{tabular}%
-{\bgroup%
-\renewcommand{\arraystretch}{1.38}%
-\convertergy@oldtabular}%
-{\convertergy@endoldtabular\egroup}
-\geometry{headheight=2.6cm,headsep=3mm,footskip=13mm}
-\geometry{top=3.5cm,bottom=3.5cm,left=3.2cm,right=3.2cm}
-\def\njut@CJK@charwidth{\hskip \f@size \p@}
-\newdimen\njut@CJK@chardimen
-\settowidth\njut@CJK@chardimen{\njut@CJK@charwidth\CJKglue}
-\newcommand{\njut@CJK@setfontspace}{%
-\settowidth\njut@CJK@chardimen{\njut@CJK@charwidth\CJKglue}%
-\ifdim\parindent=0pt\relax\else\parindent2\njut@CJK@chardimen\fi%
-}
-\renewcommand*{\indent}{\njut@CJK@setfontspace\parindent2\njut@CJK@chardimen}
-\AtBeginDocument{\indent}
-\fancypagestyle{plain}{%
-   \fancyhead{}                       % get rid of headers and footers
-   \renewcommand{\headrulewidth}{0pt} % and the header line
-   \renewcommand{\footrulewidth}{0pt} % and the footer line
-}
-\fancyfoot{}
-\renewcommand{\footrulewidth}{0pt}
-\fancyhead[LE,RO]{\thepage}
-\renewcommand{\headrulewidth}{1pt}
-\fancyhead[RE]{\leftmark}
-\fancyhead[LO]{%
- \ifthenelse{\equal{\rightmark}{}}% if \rightmark is empty
-            {\leftmark}%
-            {\rightmark}%
-}
-\pagestyle{fancy}
-\renewcommand{\chaptermark}[1]{\markboth{%
- \bfseries\if@mainmatter\chaptertitlename\hspace{1em}\fi{#1}%
-}{}}
-\renewcommand{\sectionmark}[1]{\markright{%
- \bfseries\if@mainmatter\thesection\hspace{1em}\fi{#1}%
-}}
-\def\cleardoublepage{\clearpage\if@twoside \ifodd\c@page\else
-  \hbox{}\thispagestyle{empty}\newpage\if@twocolumn\hbox{}\newpage\fi\fi\fi}
-\setlist{%
-  topsep=0.3em,             % 列表顶端的垂直空白
-  partopsep=0pt,            % 列表环境前面紧接着一个空白行时其顶端的额外垂直空白
-  itemsep=0ex plus 0.1ex,   % 列表项之间的额外垂直空白
-  parsep=0pt,               % 列表项内的段落之间的垂直空白
-  leftmargin=1.5em,         % 环境的左边界和列表之间的水平距离
-  rightmargin=0em,          % 环境的右边界和列表之间的水平距离
-  labelsep=0.5em,           % 包含标签的盒子与列表项的第一行文本之间的间隔
-  labelwidth=2em,           % 包含标签的盒子的正常宽度；若实际宽度更宽，则使用实际宽度。
-}
-%\setlist[itemize,1]{label=$\medbullet$}
-%\setlist[itemize,2]{label=$\blacksquare$}
-%\setlist[itemize,3]{label=$\Diamondblack$}
-%较小的一级 item 点
-\setlist[itemize,1]{label=$\vcenter{\hbox{\large$\bullet$}}$} 
-\setlist[itemize,2]{label=$\vcenter{\hbox{\small$\blacksquare$}}$} 
-\setlist[itemize,3]{label=$\vcenter{\hbox{\small$\Diamondblack$}}$} 
-\renewenvironment{quote}%
-                 {\list{}{\leftmargin=4em\rightmargin=4em}\item[]}%
-                 {\endlist}
-\renewenvironment{quotation}%
-                 {\list{}{\leftmargin=4em\rightmargin=4em}\item[]}%
-                 {\endlist}
-\newcommand\nchapter[1]{%
-  \if@mainmatter%
-    \@mainmatterfalse%
-    \chapter{#1}%
-    \@mainmattertrue%
-  \else
-    \chapter{#1}%
-  \fi
-}
-\def\@dottedtocline#1#2#3#4#5{%
-  \ifnum #1>\c@tocdepth \else
-    \vskip \z@ \@plus.2\p@
-    {\leftskip #2\relax \rightskip \@tocrmarg \parfillskip -\rightskip
-     \parindent #2\relax\@afterindenttrue
-     \interlinepenalty\@M
-     \leavevmode
-     \@tempdima #3\relax
-     \advance\leftskip \@tempdima \null\nobreak\hskip -\leftskip
-     {#4}\nobreak
-     \leaders\hbox{$\m@th\mkern 1.5mu\cdot\mkern 1.5mu$}\hfill
-     \nobreak
-     \hb@xt@\@pnumwidth{\hfil\normalfont \normalcolor #5}%
-     \par}%
-  \fi}
-\renewcommand*{\l@part}[2]{%
-  \ifnum \c@tocdepth >-2\relax
-    \addpenalty{-\@highpenalty}%
-    \addvspace{2.25em \@plus\p@}%
-    \setlength\@tempdima{3em}%
-    \begingroup
-      \parindent \z@ \rightskip \@pnumwidth
-      \parfillskip -\@pnumwidth
-      {\leavevmode
-       \large \bfseries #1
-       \leaders\hbox{$\m@th\mkern 1.5mu\cdot\mkern 1.5mu$}
-       \hfil \hb@xt@\@pnumwidth{\hss #2}}\par
-       \nobreak
-         \global\@nobreaktrue
-         \everypar{\global\@nobreakfalse\everypar{}}%
-    \endgroup
-  \fi}
-\renewcommand*{\l@chapter}[2]{%
-  \ifnum \c@tocdepth >\m@ne
-    \addpenalty{-\@highpenalty}%
-    \vskip 1.0em \@plus\p@
-    \setlength\@tempdima{1.5em}%
-    \begingroup
-      \parindent \z@ \rightskip \@pnumwidth
-      \parfillskip -\@pnumwidth
-      \leavevmode \bfseries
-      \advance\leftskip\@tempdima
-      \hskip -\leftskip
-      #1\nobreak
-      \leaders\hbox{$\m@th\mkern 1.5mu\cdot\mkern 1.5mu$}
-      \hfil \nobreak\hb@xt@\@pnumwidth{\hss #2}\par
-      \penalty\@highpenalty
-    \endgroup
-  \fi}
- \titlecontents{chapter}[0pt]
-    {\filright\bfseries}
-    {
-      \IfInteger{\thecontentslabel}
-	  {\hspace{-0.25em}\contentspush{第\CJKnumber{\thecontentslabel}章\ \ }}
-        {\hspace{-0.25em}\contentspush{\thecontentslabel\ \ }}
-    }
-    {}
-    {\titlerule*[5pt]{$\cdot$}\contentspage}
-\renewcommand*{\tableofcontents}{%
-    \if@twocolumn
-      \@restonecoltrue\onecolumn
-    \else
-      \@restonecolfalse
-    \fi
-    \nchapter{\contentsname}%
-    \@mkboth{\MakeUppercase\contentsname}{\MakeUppercase\contentsname}%
-    \@starttoc{toc}%
-    \if@restonecol\twocolumn\fi
-}
-\renewcommand*{\listoftables}{%
-    \if@twocolumn
-      \@restonecoltrue\onecolumn
-    \else
-      \@restonecolfalse
-    \fi
-    \nchapter{\listtablename}%
-    \@mkboth{\MakeUppercase\listtablename}{\MakeUppercase\listtablename}%
-    \@starttoc{lot}%
-    \if@restonecol\twocolumn\fi
-}
-\renewcommand*{\listoffigures}{%
-    \if@twocolumn
-      \@restonecoltrue\onecolumn
-    \else
-      \@restonecolfalse
-    \fi
-    \nchapter{\listfigurename}%
-    \@mkboth{\MakeUppercase\listfigurename}{\MakeUppercase\listfigurename}%
-    \@starttoc{lof}%
-    \if@restonecol\twocolumn\fi
-}
-\renewenvironment{thebibliography}[1]
-     {\nchapter{\bibname}%
-      \@mkboth{\MakeUppercase\bibname}{\MakeUppercase\bibname}%
-      \list{\@biblabel{\@arabic\c@enumiv}}%
-           {\settowidth\labelwidth{\@biblabel{#1}}%
-            \leftmargin\labelwidth
-            \advance\leftmargin\labelsep
-            \@openbib@code
-            \usecounter{enumiv}%
-            \let\p@enumiv\@empty
-            \renewcommand\theenumiv{\@arabic\c@enumiv}}%
-      \sloppy
-      \clubpenalty4000
-      \@clubpenalty \clubpenalty
-      \widowpenalty4000%
-      \sfcode`\.\@m}
-     {\def\@noitemerr
-       {\@latex@warning{Empty `thebibliography' environment}}%
-      \endlist}
-\bibliographystyle{gbt7714-2005}
-%\setcitestyle{super,square}
-\setcitestyle{square}
-\renewcommand\NAT@citesuper[3]{%
-\ifNAT@swa%
-  \if*#2*\else#2\NAT@spacechar\fi%
-  \unskip\kern\p@\textsuperscript{\NAT@@open#1\NAT@@close#3}%
-\else #1\fi\endgroup%
-}
-\AtBeginDocument{%
-\let\oldref\ref%
-\renewcommand*{\ref}[1]{\thinspace\oldref{#1}}%
-\renewcommand*{\eqref}[1]{(\oldref{#1})}
-}
-\DefineFNsymbols*{circlednumber}[text]{%
-   {\ding{192}} %
-   {\ding{193}} %
-   {\ding{194}} %
-   {\ding{195}} %
-   {\ding{196}} %
-   {\ding{197}} %
-   {\ding{198}} %
-   {\ding{199}} %
-   {\ding{200}} %
-   {\ding{201}} %
-}%
-\setfnsymbol{circlednumber}
-\newcommand*{\classification}[1]{%
-  \renewcommand*{\njut@value@nlc@classification}{#1}}
-\newcommand*{\securitylevel}[1]{%
-  \renewcommand*{\njut@value@nlc@securitylevel}{#1}}
-\newcommand*{\openlevel}{\njut@cap@nlc@openlevel}
-\newcommand*{\controllevel}{\njut@cap@nlc@controllevel}
-\newcommand*{\confidentiallevel}{\njut@cap@nlc@confidentiallevel}
-\newcommand*{\clasifiedlevel}{\njut@cap@nlc@clasifiedlevel}
-\newcommand*{\mostconfidentiallevel}{\njut@cap@nlc@mostconfidentiallevel}
-\newcommand*{\udc}[1]{%
-  \renewcommand*{\njut@value@nlc@udc}{#1}}
-\newcommand*{\nlctitlea}[1]{%
-  \renewcommand{\njut@value@nlc@titlea}{#1}}
-\newcommand*{\nlctitleb}[1]{%
-  \renewcommand{\njut@value@nlc@titleb}{#1}}
-\newcommand*{\nlctitlec}[1]{%
-  \renewcommand{\njut@value@nlc@titlec}{#1}}
-\newcommand*{\supervisorinfo}[1]{%
-  \renewcommand{\njut@value@nlc@supervisorinfo}{#1}}
-\newcommand*{\chairman}[1]{%
-  \renewcommand{\njut@value@nlc@chairman}{#1}}
-\newcommand*{\reviewera}[1]{%
-  \renewcommand{\njut@value@nlc@reviewera}{#1}}
-\newcommand*{\reviewerb}[1]{%
-  \renewcommand{\njut@value@nlc@reviewerb}{#1}}
-\newcommand*{\reviewerc}[1]{%
-  \renewcommand{\njut@value@nlc@reviewerc}{#1}}
-\newcommand*{\reviewerd}[1]{%
-  \renewcommand{\njut@value@nlc@reviewerd}{#1}}
-\newcommand*{\nlcdate}[1]{%
-  \renewcommand{\njut@value@nlc@date}{#1}}
-\renewcommand*{\title}[1]{%
-  \renewcommand{\njut@value@title}{#1}}
-\newcommand*{\titlea}[1]{%
-  \renewcommand{\njut@value@titlea}{#1}}
-\newcommand*{\titleb}[1]{%
-  \renewcommand{\njut@value@titleb}{#1}}
-\renewcommand*{\author}[1]{%
-  \renewcommand{\njut@value@author}{#1}}
-\newcommand*{\telphone}[1]{%
-  \renewcommand{\njut@value@telphone}{#1}}
-\newcommand*{\email}[1]{%
-  \renewcommand{\njut@value@email}{#1}}
-\newcommand*{\studentnum}[1]{%
-  \renewcommand{\njut@value@studentnum}{#1}}
-\newcommand*{\grade}[1]{%
-  \renewcommand{\njut@value@grade}{#1}}
-\newcommand*{\graduateyear}[1]{%
-  \renewcommand{\njut@value@graduateyear}{#1}}
-\newcommand*{\supervisor}[1]{%
-  \renewcommand{\njut@value@supervisor}{#1}}
-\newcommand*{\supervisortelphone}[1]{%
-  \renewcommand{\njut@value@supervisortelphone}{#1}}
-\newcommand*{\major}[1]{%
-  \renewcommand{\njut@value@major}{#1}}
-\newcommand*{\researchfield}[1]{%
-  \renewcommand{\njut@value@researchfield}{#1}}
-\newcommand*{\department}[1]{%
-  \renewcommand{\njut@value@department}{#1}}
-\newcommand*{\institute}[1]{%
-  \renewcommand{\njut@value@institute}{#1}}
-\newcommand*{\submitdate}[1]{%
-  \renewcommand{\njut@value@submitdate}{#1}}
-\newcommand*{\defenddate}[1]{%
-  \renewcommand{\njut@value@defenddate}{#1}}
-\renewcommand*{\date}[1]{%
-  \renewcommand{\njut@value@date}{#1}}
-\newcommand*{\englishtitle}[1]{%
-  \renewcommand{\njut@value@en@title}{#1}}
-\newcommand*{\englishauthor}[1]{%
-  \renewcommand{\njut@value@en@author}{#1}}
-\newcommand{\englishsupervisor}[1]{%
-  \renewcommand{\njut@value@en@supervisor}{#1}}
-\newcommand{\englishmajor}[1]{%
-  \renewcommand{\njut@value@en@major}{#1}}
-\newcommand{\englishdepartment}[1]{%
-  \renewcommand{\njut@value@en@department}{#1}}
-\newcommand{\englishinstitute}[1]{%
-  \renewcommand{\njut@value@en@institute}{#1}}
-\newcommand*{\englishdate}[1]{%
-  \renewcommand{\njut@value@en@date}{#1}}
-\newcommand{\njut@underline}[2][\textwidth]%
-           {\CJKunderline{\makebox[#1]{#2}}}
-\def\njutunderline{\@ifnextchar[\njut@underline\CJKunderline}
-\newcommand*{\makenlctitle}{%
-  \thispagestyle{empty}
-  \pdfbookmark[0]{\njut@cap@nlc}{nlc}
-  {\songti\zihao{-4}
-    \makebox[40pt][l]{\njut@cap@nlc@classification}
-    \njutunderline[150pt]{\njut@value@nlc@classification}
-    \hfill
-    \makebox[40pt][r]{\njut@cap@nlc@securitylevel}
-    \njutunderline[150pt]{\njut@value@nlc@securitylevel}
-    \vskip 10pt
-    \makebox[40pt][l]{\njut@cap@nlc@udc}
-    \njutunderline[150pt]{\njut@value@nlc@udc}
+\RequirePackage { xtemplate, l3keys2e }
+\msg_new:nnn { njuthesis } { l3-too-old }
+  {
+    Package~ "#1"~ is~ too~ old. \\
+    Please~ update~ an~ up-to-date~ version~ of~ the~
+    bundles~ "l3kernel"~ and~ "l3packages"~ using~
+    your~ TeX~ package~ manager~ or~ from~ CTAN.
   }
-  \vskip\stretch{2}
-  \begin{center}
-    \def\ULthickness{1pt}
-    {\kaishu\zihao{-0} \njut@cap@nlc@title}
-    {\kaishu\zihao{1}
-    \vskip \stretch{1}
-    \njutunderline[12em]{\njut@value@nlc@titlea}\\
-    \njutunderline[12em]{\njut@value@nlc@titleb}\\
-    \njutunderline[12em]{\njut@value@nlc@titlec}\\
-    }
-    \vskip \stretch{1}
-    {\kaishu\zihao{4}\njut@cap@nlc@quotetitle}
-    \vskip \stretch{1}
-    {\kaishu\zihao{1}\njutunderline{\njut@value@author}}
-    \vskip \stretch{1}
-    {\kaishu\zihao{4}\njut@cap@nlc@author}
-  \end{center}
-  \vskip\stretch{1}
-  {\kaishu\zihao{4}
-    \noindent\njut@cap@nlc@supervisor%
-    \njutunderline[94pt]{\njut@value@supervisor}\par
-    \noindent\njutunderline[\textwidth]{%
-      \njut@value@nlc@supervisorinfo}\par
-    \noindent\njut@cap@nlc@degree%
-    \njutunderline[8em]{\njut@value@degree}%
-    \noindent\njut@cap@nlc@major%
-    \njutunderline[164pt]{\njut@value@major}\par
-    \noindent\njut@cap@nlc@submitdate%
-    \njutunderline[8em]{\njut@value@submitdate}%
-    \njut@cap@nlc@defenddate%
-    \njutunderline[134pt]{\njut@value@defenddate}\par
-    \noindent\njut@cap@nlc@institute\njutunderline[290pt]{}\par
-    \noindent\hfill\njut@cap@nlc@chairman%
-    \njutunderline[9em]{\njut@value@nlc@chairman}\par
-    \noindent\hfill\njut@cap@nlc@reviwer%
-    \njutunderline[9em]{\njut@value@nlc@reviewera}\par
-    \noindent\hfill\njutunderline[9em]{\njut@value@nlc@reviewerb}\par
-    \noindent\hfill\njutunderline[9em]{\njut@value@nlc@reviewerc}\par
-    \noindent\hfill\njutunderline[9em]{\njut@value@nlc@reviewerd}\par
+\clist_map_inline:nn { xtemplate, l3keys2e }
+  {
+    \@ifpackagelater {#1} { 2020/10/01 }
+      { } { \msg_error:nnn { njuthesis } { l3-too-old } {#1} }
   }
-  \cleardoublepage
-}
-\newcommand*{\njut@covertable@onelinetitle}{
-  \begin{tabular}{p{5em}c}
-      \bfseries\makebox[5em][s]{\njut@cap@cover@title}
-      & \njutunderline[310pt]{\njut@value@title}\\
-      \bfseries\makebox[5em][s]{\njut@cap@cover@author}
-      & \njutunderline[310pt]{\njut@value@author}\\
-      \bfseries\makebox[5em][s]{\njut@cap@cover@major}
-      & \njutunderline[310pt]{\njut@value@major}\\
-      \bfseries\makebox[5em][s]{\njut@cap@cover@researchfield}
-      & \njutunderline[310pt]{\njut@value@researchfield}\\
-      \bfseries\makebox[5em][s]{\njut@cap@cover@supervisor}
-      & \njutunderline[310pt]{\njut@value@supervisor}\\
-  \end{tabular}
-}
-\newcommand*{\njut@covertable@twolinetitle}{
-  \begin{tabular}{p{5em}c}
-      \bfseries\makebox[5em][s]{\njut@cap@cover@title}
-      & \njutunderline[310pt]{\njut@value@titlea}\\
-      \bfseries\makebox[5em][s]{}
-      & \njutunderline[310pt]{\njut@value@titleb}\\
-      \bfseries\makebox[5em][s]{\njut@cap@cover@author}
-      & \njutunderline[310pt]{\njut@value@author}\\
-      \bfseries\makebox[5em][s]{\njut@cap@cover@major}
-      & \njutunderline[310pt]{\njut@value@major}\\
-      \bfseries\makebox[5em][s]{\njut@cap@cover@researchfield}
-      & \njutunderline[310pt]{\njut@value@researchfield}\\
-      \bfseries\makebox[5em][s]{\njut@cap@cover@supervisor}
-      & \njutunderline[310pt]{\njut@value@supervisor}\\
-  \end{tabular}
-}
-\renewcommand*{\maketitle}{%
-  \thispagestyle{empty}
-  \pdfbookmark[0]{\njut@cap@cover}{cover}
-  \begin{center}
-    \vskip 10mm
-    \includegraphics[width=1.6cm]{\njut@cap@institute@logo} \\
-    \vskip 5mm
-    \includegraphics[height=1.5cm]{\njut@cap@institute@name} \\
-    \vskip 3cm
-    {\bf\kaishu\zihao{1}\makebox[10em][s]{\njut@cap@cover@thesis}}\\
-    \vskip 5mm
-    {\bf\kaishu\zihao{1}（\makebox[7em][s]{\njut@cap@cover@apply}）}\\
-    \vskip\stretch{1}
-    {\bgroup
-    \kaishu\zihao{3} %中文封面字号
-    \def\tabcolsep{1pt}
-    \def\arraystretch{1.5}
-	\ifdefempty{\njut@value@title}{\njut@covertable@twolinetitle}{\njut@covertable@onelinetitle}
-    \egroup}\\
-    \vskip \stretch{1}
-    {\bf\kaishu\zihao{4}\njut@value@date}
-  \end{center}
-  \ifnjut@backinfo
+\@ifpackagelater { expl3 } { 2023/10/10 } { }
+  {
+    \cs_generate_variant:Nn \tl_set:Nn        { Ne }
+    \cs_generate_variant:Nn \tl_gset:Nn       { Ne }
+    \cs_generate_variant:Nn \tl_const:Nn      { Ne }
+    \cs_generate_variant:Nn \tl_gput_right:Nn { Ne }
+  }
+\msg_new:nnn { njuthesis } { unsupported-engine }
+  {
+    The~ njuthesis~ class~ requires~ either~
+    XeTeX~ or~ LuaTeX. \\
+    "#1"~ is~ not~ supported~ at~ present.~
+    You~ must~ change~ your~ typesetting~ engine~
+    to~ "xelatex"~ or~ "lualatex".
+  }
+\bool_lazy_or:nnF
+  { \sys_if_engine_xetex_p:  }
+  { \sys_if_engine_luatex_p: }
+  { \msg_fatal:nne { njuthesis } { unsupported-engine } { \c_sys_engine_str } }
+\box_new:N   \l__nju_tmpa_box
+\box_new:N   \l__nju_tmpb_box
+\box_new:N   \l__nju_tmpc_box
+\clist_new:N \l__nju_tmp_clist
+\dim_new:N   \l__nju_tmpa_dim
+\dim_new:N   \l__nju_tmpb_dim
+\int_new:N   \l__nju_tmpa_int
+\int_new:N   \l__nju_tmpb_int
+\skip_new:N  \l__nju_tmp_skip
+\tl_new:N    \l__nju_tmpa_tl
+\tl_new:N    \l__nju_tmpb_tl
+\int_new:N \g__nju_info_type_int
+\bool_new:N \g__nju_opt_academic_bool
+\bool_new:N        \g__nju_opt_draft_bool
+\bool_gset_false:N \g__nju_opt_draft_bool
+\bool_new:N \g__nju_opt_supvii_bool
+\tl_new:N \g__nju_info_supvfull_tl
+\tl_new:N \g__nju_info_supvfull_en_tl
+\tl_new:N \g__nju_info_major_tl
+\tl_new:N \g__nju_info_majorc_tl
+\tl_new:N \g__nju_font_set_tl
+\tl_new:N \g__nju_font_latin_tl
+\tl_new:N \g__nju_font_cjk_tl
+\tl_new:N \g__nju_font_math_tl
+\tl_new:N \g__nju_font_path_tl
+\bool_new:N \g__nju_font_path_bool
+\tl_new:N \g__nju_config_tl
+\tl_const:Ne \c__nju_name_today_tl
+  {
+    \int_to_arabic:n { \c_sys_year_int  } -
+    \int_to_arabic:n { \c_sys_month_int } -
+    \int_to_arabic:n { \c_sys_day_int   }
+  }
+\clist_const:Nn \c__nju_name_type_clist
+  { 学士, 硕士, 博士 }
+\clist_const:Nn \c__nju_name_type_en_clist
+  { Bachelor, Master, Doctor~of~Philosophy }
+\clist_const:Nn \c__nju_name_month_en_clist
+  {
+    January, February, March, April, May, June,
+    July, August, September, October, November, December
+  }
+\clist_const:Nn \c__nju_name_anon_clist
+  {
+    author, chairman, email, grade, student-id, reviewer,
+    supervisor-contact, supervisor, supervisor-ii
+  }
+\clist_const:Nn \c__nju_name_anon_en_clist
+  { author, supervisor, supervisor-ii }
+\cs_new:Nn \__nju_null: { \hbox:n { } }
+\cs_new:Nn \__nju_space: { \skip_horizontal:n { .5 em } }
+\cs_new:Nn \__nju_quad:  { \skip_horizontal:n {  1 em } }
+\cs_new:Nn \__nju_vskip: { \skip_vertical:N   \l__nju_vsep_dim }
+\cs_new:Nn \__nju_hskip: { \skip_horizontal:N \l__nju_hsep_dim }
+\cs_set_protected:Npn \__nju_vskip:N #1
+  {
+    \tex_hrule:D \@height \c_zero_dim \scan_stop:
+    \tex_penalty:D \@M
+    \skip_vertical:N #1
+    \skip_vertical:N \c_zero_dim
+  }
+\cs_new:Npn \__nju_define_name:nn #1
+  {
+    \tl_new:c  { l__nju_name_ #1    _tl }
+    \tl_set:cn { l__nju_name_ #1    _tl }
+  }
+\cs_new:Npn \__nju_define_name:nnn #1#2#3
+  {
+    \__nju_define_name:nn { #1     } {#2}
+    \__nju_define_name:nn { #1 _en } {#3}
+  }
+\cs_new:Npn \__nju_define_fmt:nn #1 { \tl_set:cn { l__nju_fmt_ #1 _tl } }
+\cs_new:Npn \__nju_define_dim:nn  #1
+  {
+    \dim_new:c   { l__nju_ #1 _dim  }
+    \dim_set:cn  { l__nju_ #1 _dim  }
+  }
+\cs_new:Npn \__nju_define_skip:nn #1
+  {
+    \skip_new:c  { l__nju_ #1 _skip }
+    \skip_set:cn { l__nju_ #1 _skip }
+  }
+\cs_new:Npn \__nju_info:n #1 { \tl_use:c { g__nju_info_ #1 _tl } }
+\cs_new:Npn \__nju_name:n #1 { \tl_use:c { l__nju_name_ #1 _tl } }
+\cs_new:Npn \__nju_fmt:n  #1 { \tl_use:c { l__nju_fmt_  #1 _tl } }
+\cs_new:Npn \__nju_name:nn #1#2
+  { \group_begin: \__nju_fmt:n {#1} \__nju_name:n {#2} \group_end: }
+\cs_new:Npn \__nju_fontsize:nn #1#2
+  { \fontsize {#1} {#2} \selectfont }
+\cs_new:Npn \__nju_fontsize:nnn #1#2#3
+  { \__nju_fontsize:nn {#1} { \fp_to_decimal:n { #3 * #1 } } }
+\cs_new:Npn \__nju_zihao:nn #1#2
+  {
+    \prop_get:NnNTF \c__ctex_font_size_prop {#2} \l__ctex_font_size_tl
+      { \exp_after:wN \__nju_fontsize:nnn \l__ctex_font_size_tl {#1} }
+      { \msg_error:nnn { ctex } { fontsize } {#2} }
+  }
+\cs_new:Npn \__nju_zihao:n { \__nju_zihao:nn { 1.3 } }
+\cs_generate_variant:Nn \cs_new:Npn { Npo }
+\cs_new:Npo \__nju_set_ccglue:n #1
+  {
+    \sys_if_engine_xetex:TF
+      { \skip_set:Nn \l__ctex_ccglue_skip {#1} }
+      { \ltjsetparameter { kanjiskip = {#1} } }
+  }
+\cs_new_protected:Npn \__nju_box_ulined:NN #1#2
+  {
+    \mode_leave_vertical:
+    \rule [ \l__nju_ruledpi_dim ] {#1} { \l__nju_rulehti_dim }
+    \skip_horizontal:n { -#1 }
+    \hbox_to_wd:nn {#1} { \tex_hfil:D #2 \tex_hfil:D }
+  }
+\cs_generate_variant:Nn \__nju_box_ulined:NN { Nc }
+\cs_new_protected:Npn \__nju_box_ulined_info:Nn #1#2
+  { \__nju_box_ulined:Nc #1 { g__nju_info_ #2 _tl } }
+\cs_new_protected:Npn \__nju_box_spread:NNNn #1#2#3#4
+  {
+    \mode_leave_vertical:
+    \__nju_get_width:Nn #1 { #3 #4 }
+    \hbox_to_wd:nn {#2}
+      {
+        \dim_compare:nTF { #1 > #2 }
+          {
+            \tex_hfil:D \scalebox
+              { \dim_to_decimal_in_unit:nn {#2} {#1} }
+              [ 1.0 ] { #3 #4 } \tex_hfil:D
+          }
+          { #3 \tl_map_inline:nn {#4} { ##1 \tex_hfil:D } \tex_unskip:D }
+      }
+  }
+\cs_new:Npn \__nju_box_spread:NNn { \__nju_box_spread:NNNn \l__nju_tmp_skip }
+\cs_generate_variant:Nn \__nju_box_spread:NNn { NNv }
+\cs_generate_variant:Nn \__nju_box_spread:NNn { NNe }
+\cs_new_protected:Npn \__nju_box_spread_name:Nn #1#2
+  { \__nju_box_spread:NNv #1 \c_empty_tl { l__nju_name_ #2 _tl } }
+\cs_new_protected:Npn \__nju_box_spread_name:NNn #1#2#3
+  { \__nju_box_spread:NNv #1 #2 { l__nju_name_ #3 _tl } }
+\cs_new_protected:Npn \__nju_box_center:Nn #1#2
+  {
+    \mode_leave_vertical:
+    \hbox_to_wd:nn {#1} { \tex_hfil:D #2 \tex_hfil:D }
+  }
+\cs_new_protected:Npn \__nju_box_multiline:NNNNn #1#2#3#4#5
+  {
+    \int_set:Nn #1 { \int_max:nn { \clist_count:N #3 } {#5} }
+    \int_step_inline:nn {#1}
+      {
+        \clist_gpop:NNF #3 #2 { \tl_set_eq:NN #2 \c_empty_tl }
+        \__nju_box_ulined:NN #4 #2 \tex_par:D
+      }
+  }
+\cs_new:Npn \__nju_box_multiline:NNn
+  { \__nju_box_multiline:NNNNn \l__nju_tmpa_int \l__nju_tmpa_tl }
+\cs_new_protected:Npn \__nju_uline:n #1
+  {
+    \mode_leave_vertical:
+    \rule [ \l__nju_ruledpi_dim ] {#1} { \l__nju_rulehti_dim }
+    \skip_horizontal:n { -#1 }
+  }
+\cs_new_protected:Npn \__nju_uuline:N #1
+  {
+    \mode_leave_vertical:
+    \rule [ \l__nju_ruledpii_dim  ] {#1} { \l__nju_rulehtii_dim }
+    \skip_horizontal:n { -#1 }
+    \rule [ \l__nju_ruledpiii_dim ] {#1} { \l__nju_rulehtii_dim }
+    \skip_horizontal:n { -#1 }
+  }
+\cs_new:Npn \__nju_get_width:Nn #1#2
+  {
+    \hbox_set:Nn \l__nju_tmpa_box {#2}
+    \dim_set:Nn #1 { \box_wd:N \l__nju_tmpa_box }
+  }
+\cs_generate_variant:Nn \__nju_get_width:Nn { NV }
+\cs_generate_variant:Nn \__nju_get_width:Nn { Nv }
+\cs_new:Npn \__nju_get_max_width:NN #1#2
+  {
+    \clist_map_inline:Nn #2
+      {
+        \__nju_get_width:Nv \l__nju_tmpa_dim { g__nju_info_ ##1 _tl }
+        \dim_gset:Nn #1 { \dim_max:nn {#1} { \l__nju_tmpa_dim } }
+      }
+  }
+\cs_new_protected:Npn \__nju_get_width_print:Nn #1#2
+  {
+    \__nju_get_width:Nn #1 {#2}
+    \dim_set:Nn #1 { \textwidth - #1 } #2
+  }
+\cs_generate_variant:Nn \__nju_get_width_print:Nn { Nv }
+\cs_generate_variant:Nn \__nju_get_width_print:Nn { Ne }
+\cs_new_protected:Npn \__nju_uline_entry:Nn #1#2
+  {
+    \__nju_get_width_print:Nv #1 { l__nju_name_ #2 _tl }
+    \__nju_box_ulined_info:Nn #1 {#2}
+  }
+\cs_new_protected:Npn \__nju_uline_bientry:Nn #1#2
+  {
+    \__nju_get_width_print:Nv #1 { l__nju_name_ #2 _tl }
+    \dim_sub:Nn #1 { \textwidth / 2 }
+    \__nju_box_ulined_info:Nn #1 {#2}
+  }
+\cs_new:Npn \__nju_date:www    #1-#2-#3 \q_stop
+  { \__zhnum_date_aux:nnn {#1} {#2} {#3} }
+\cs_new:Npn \__nju_date_en:www #1-#2-#3 \q_stop
+  { \clist_item:Nn \c__nju_name_month_en_clist {#2} ~#3 , ~#1  }
+\cs_new:Npn \__nju_date:nn { \__nju_date:nnn { } }
+\cs_new:Npn \__nju_date:nnn #1#2#3
+  {
+    \tl_gset:cx { g__nju_info_ #2 date #1 _tl }
+      {
+        \tl_if_empty:nTF {#3}
+          { \__nju_name:n { blankdate #1 } }
+          { \use:c { __nju_date #1 :www } #3 \q_stop }
+      }
+  }
+\cs_new_protected:Npn \__nju_at_begin_document:n #1
+  { \hook_gput_next_code:nn { begin document } {#1} }
+\cs_new:Npn \__nju_cs_clear:N #1 { \cs_set_eq:NN #1 \tex_relax:D }
+\cs_new:Npn \__nju_msg:nn { \msg_new:nnn { njuthesis } }
+\cs_new:Npn \__nju_loop_until:nnn #1#2#3
+  { #2 \bool_if:nF {#1} { #3 \__nju_loop_until:nnn {#1} {#2} {#3} } }
+\cs_new:Npn \__nju_breakpar_loop:n #1
+  {
+    \dim_set:Nn \l__nju_tmpa_dim
+      { - \tex_prevdepth:D - \l__nju_ruledpi_dim - \l__nju_rulehti_dim }
+    \hbox_gset:Nn \l__nju_tmpc_box { }
+    \__nju_loop_until:nnn { \box_if_empty_p:N \l__nju_tmpb_box }
+      {
+        \box_gset_to_last:N \l__nju_tmpb_box
+        \tex_unskip:D \tex_unpenalty:D
+      }
+      {
+        \hbox_gset:Nn \l__nju_tmpc_box
+          {
+            \vbox_top:n
+              {
+                \box_use_drop:N \l__nju_tmpb_box
+                \__kernel_kern:n { \l__nju_tmpa_dim }
+                \tex_hrule:D
+              }
+            \tex_penalty:D
+            \l__nju_tmpa_box
+            \hbox_unpack_drop:N \l__nju_tmpc_box
+          }
+        #1
+      }
+  }
+\cs_new:Npn \__nju_breakpar_print:nn #1#2
+  {
+    \group_begin:
+      \tex_noindent:D #1
+      \hbox_unpack_drop:N \l__nju_tmpc_box #2
+      \tex_par:D
+    \group_end:
+  }
+\cs_new_protected:Npn \__nju_uline_title:
+  {
+    \vbox_set:Nn \l__nju_tmpa_box
+      {
+        \skip_set:Nn \tex_leftskip:D { .5 em plus 1 fill }
+        \skip_set_eq:NN \tex_rightskip:D \tex_leftskip:D
+        \g__nju_info_title_tl \tex_par:D
+        \__nju_breakpar_loop:n { }
+      }
+    \__nju_breakpar_print:nn { } { }
+  }
+\cs_new_protected:Npn \__nju_cover_entry_title:NNNN #1#2#3#4
+  {
+    \tl_if_empty:NT \g__nju_info_title_tl
+      { \msg_error:nn { njuthesis } { missing-title } }
+    \__nju_box_spread_name:NNn #2 #4 { title }
+    \mode_leave_vertical: #1
+    \parbox [ t ] {#3}
+      {
+        \l__nju_fmt_covertitle_tl \__nju_uline_title:
+        \dim_gset_eq:NN \l__nju_tmpa_dim \tex_prevdepth:D
+      }
+    \tex_par:D
+    \dim_set_eq:NN \tex_prevdepth:D \l__nju_tmpa_dim
+  }
+\cs_new:Npn \__nju_cover_entry_title:NNN { \__nju_cover_entry_title:NNNN \__nju_hskip: }
+\cs_new_protected:Npn \__nju_cover_entry:NNNNn #1#2#3#4#5
+  {
+    \__nju_box_spread_name:NNn #2 #4 {#5} #1
+    \__nju_box_ulined_info:Nn  #3    {#5} \tex_par:D
+  }
+\cs_new:Npn \__nju_cover_entry:NNNn { \__nju_cover_entry:NNNNn \__nju_hskip: }
+\cs_new_protected:Npn \__nju_cover_entry:NNNnn #1#2#3#4#5
+  {
+    \__nju_box_spread_name:NNn #1 #3 {#4} \__nju_hskip:
+    \__nju_box_ulined_info:Nn  #2    {#4} \__nju_hskip:
+    \__nju_box_spread_name:NNn #1 #3 {#5} \__nju_hskip:
+    \__nju_box_ulined_info:Nn  #2    {#5} \tex_par:D
+  }
+\cs_new_protected:Npn \__nju_cover_entry_supv:NNNn #1#2#3#4
+  {
+    \tl_set:Nn \l__nju_tmpa_tl
+      { \clist_item:cn { g__nju_info_ #4 _clist } { 1 } }
+    \tl_set:Nn \l__nju_tmpb_tl
+      { \clist_item:cn { g__nju_info_ #4 _clist } { 2 } }
+    \__nju_box_spread_name:NNn #1 #3 {#4}        \__nju_hskip:
+    \__nju_box_ulined:NN #2 \l__nju_tmpa_tl        \__nju_hskip:
+    \__nju_box_spread_name:NNn #1 #3 { supvtitle } \__nju_hskip:
+    \__nju_box_ulined:NN #2 \l__nju_tmpb_tl        \tex_par:D
+  }
+\cs_new_protected:Npn \__nju_emblem:N #1
+  { \njuemblem [ \l__nju_fmt_emblemcolor_tl ] {#1} { ! } }
+\cs_new_protected:Npn \__nju_name:N   #1
+  { \njuname   [ \l__nju_fmt_namecolor_tl   ] {#1} { ! } }
+\cs_new_protected:Npn \__nju_abs_bookmark:nn #1#2
+  {
+    \phantomsection
+    \__nju_bookmark:Nnn \g__nju_abs_showentry_bool {#1} {#2}
+    \__nju_chapter_header:n {#1}
+  }
+\cs_generate_variant:Nn \__nju_abs_bookmark:nn { Vn }
+\cs_new_protected:Npn \__nju_abs_title:N #1
+  {
+    \__nju_get_width:NV \l__nju_tmpa_dim #1
+    \__nju_uuline:N     \l__nju_tmpa_dim #1
+  }
+\cs_new_protected:Npn \__nju_uline_list:NNn #1#2#3
+  {
+    \vbox_set:Nn \l__nju_tmpa_box
+      {
+        \__nju_get_width:Nn \tex_hangindent:D {#3}
+        \int_set:Nn \tex_hangafter:D { -1 }
+        \skip_set_eq:NN \tex_leftskip:D #2
+        \skip_set_eq:NN \tex_rightskip:D \tex_leftskip:D
+        \tex_noindent:D #1 \tex_par:D
+        \int_gzero:N \l__nju_tmpa_int
+        \__nju_breakpar_loop:n { \int_gincr:N \l__nju_tmpa_int }
+      }
+      \__nju_breakpar_print:nn {#3}
+        {
+        \bool_if:NT \g__nju_abs_title_strict_bool
+          {
+            \int_case:nnF { \l__nju_tmpa_int }
+              {
+                { 0 } { \msg_error:nn { njuthesis } { missing-title } }
+                { 1 } { \__nju_uline:n { \textwidth } }
+                { 2 } { }
+              }
+              { \msg_warning:nn { njuthesis } { abs-title-too-long } }
+            \tex_par:D
+          }
+      }
+  }
+\cs_generate_variant:Nn \__nju_uline_list:NNn { NNe }
+\DeclareObjectType { nju } { \c_zero_int }
+\DeclareTemplateInterface { nju } { element } { \c_zero_int }
+  {
+    content     : tokenlist = \c_empty_tl,
+    format      : tokenlist = \c_empty_tl,
+    bottom-skip : skip      = \c_zero_skip,
+    align       : choice { l, r, c, n } = c
+  }
+\DeclareTemplateCode { nju } { element } { \c_zero_int }
+  {
+    content     = \l__njuelem_content_tl,
+    format      = \l__njuelem_format_tl,
+    bottom-skip = \l__njuelem_bottom_skip,
+    align =
+      {
+        l = { \cs_set_eq:NN \__njuelem_align: \raggedright },
+        r = { \cs_set_eq:NN \__njuelem_align: \raggedleft  },
+        c = { \cs_set_eq:NN \__njuelem_align: \centering   },
+        n = { \cs_set:Nn    \__njuelem_align: { }          }
+      }
+  }
+  {
+    \AssignTemplateKeys
+    \group_begin:
+      \__njuelem_align:
+      \l__njuelem_format_tl \l__njuelem_content_tl \tex_par:D
+    \group_end:
+    \__nju_vskip:N \l__njuelem_bottom_skip
+  }
+\exp_args_generate:n { NVV }
+\DeclareTemplateInterface { nju } { page } { \c_zero_int }
+  {
+    element     : commalist = \c_empty_clist,
+    prefix      : tokenlist = \c_empty_tl,
+    format      : tokenlist = \c_empty_tl,
+    top-skip    : skip      = \c_zero_skip,
+    bottom-skip : skip      = \c_zero_skip,
+    bm-text     : tokenlist = \c_empty_tl,
+    bm-name     : tokenlist = \c_empty_tl,
+    bookmark    : choice { toc, pdf, none } = none
+  }
+\DeclareTemplateCode { nju } { page } { \c_zero_int }
+  {
+    element     = \l__njupage_element_clist,
+    prefix      = \l__njupage_prefix_tl,
+    format      = \l__njupage_format_tl,
+    top-skip    = \l__njupage_top_skip,
+    bottom-skip = \l__njupage_bottom_skip,
+    bm-text     = \l__njupage_bm_text_tl,
+    bm-name     = \l__njupage_bm_name_tl,
+    bookmark    =
+      {
+        toc  = { \cs_set_eq:NN \__njupage_bookmark:nn \__nju_bookmark_toc:nn },
+        pdf  = { \cs_set_eq:NN \__njupage_bookmark:nn \__nju_bookmark_pdf:nn },
+        none = { \cs_set:Nn    \__njupage_bookmark:nn { } }
+      }
+  }
+  {
+    \AssignTemplateKeys
     \clearpage
-    \thispagestyle{empty}
-    \vspace*{\stretch{1}}
-    {\bf\kaishu\zihao{-3}
-    \noindent
-    \begin{tabular}{p{6.2em}l}
-    \makebox[6em][s]{\njut@cap@coverback@studentnum}： &\njut@value@studentnum\\
-    \makebox[6em][s]{\njut@cap@coverback@defenddate}： &\njut@value@defenddate\\
-    \makebox[6em][s]{\njut@cap@coverback@supervisor}： &\njut@cap@coverback@sign\\
-    \end{tabular}}
-    \clearpage
-  \else
+    \thispagestyle { empty }
+    \__nju_vskip:N \l__njupage_top_skip
+    \exp_args:NVV \__njupage_bookmark:nn
+      \l__njupage_bm_text_tl \l__njupage_bm_name_tl
+    \group_begin:
+      \l__njupage_format_tl
+      \clist_map_inline:Nn \l__njupage_element_clist
+        { \UseInstance { nju } { \l__njupage_prefix_tl ##1 } }
+    \group_end:
+    \__nju_vskip:N \l__njupage_bottom_skip
+  }
+\cs_new:Npn \__nju_declare_element:nn #1#2
+  { \DeclareInstance { nju } {#1} { element } {#2} }
+\cs_new:Npn \__nju_declare_page:nn    #1#2
+  { \DeclareInstance { nju } {#1} { page    } {#2} }
+\__nju_msg:nn { abs-title-too-long }
+  {
+    Your~ title~ seems~ too~ long~ to~ fit~ in~ two~ lines.\\
+    I~ have~ drawn~ additional~ lines~ to~ contain~ it,~
+    which~ will~ probably~ make~ your~ abstract~ page~
+    look~ slightly~ different~ from~ the~ standard.~
+    You~ can~ use~ the~ "abstract/title-style"~ key~
+    to~ disable~ this~ message.
+  }
+\__nju_msg:nn { empty-theorem-type }
+  {
+    Empty~ theorem~ list~ to~ define.\\
+    The~ key~ "theorem/type"~ should~ not~ be~ left~ empty.
+  }
+\__nju_msg:nn { load-config  }
+  { I~ am~ loading~ config~ file~ "#1". }
+\__nju_msg:nn { missing-image }
+  {
+    You~ have~ not~ selected~ local~ files~
+    for~ emblem~ and~ name~ images.\\
+    It~ seems~ that~ you~ haven't~ fill~ in~ both~
+    "image/nju-emblem"~ and~ "image/nju-name",~ therefore~
+    I~ am~ using~ the~ package~ "njuvisual"~ instead,~
+    which~ may~ slow~ down~ the~ compilation.
+  }
+\__nju_msg:nn { missing-ntheorem }
+  {
+    "ntheorem"~ package~ not~ detected.\\
+    The~ functionality~ of~ built-in~ theorem~ settings~
+    requires~ loading~ the~ class~ with~ "ntheorem"~ option~
+    set~ to~ "true".
+  }
+\__nju_msg:nn { missing-symbol }
+  {
+    \string\mdwhtsquare\ and~ \string\checkmark\ are~ not~
+    contained~ in~ the~ standard~ amsmath~ package.~ You~
+    should~ redefine~ them~ with~ other~ packages~ loaded~
+    to~ properly~ generate~ the~ declaration~ page.
+  }
+\__nju_msg:nn { missing-title }
+  {
+    Thesis~ title~ should~ not~ be~ left~ blank.\\
+    Please~ check~ whether~ you~ have~ fill~ in~
+    both Chinese~ and~ English~ titles.
+  }
+\__nju_msg:nn { no-small-caps }
+  {
+    I~ am~ using~ TeX~ Gyre~ Termes~ as~ default~ Roman~ font.\\
+    This~ is~ because~ the~ "Times~ New~ Roman"~ font~ in~ your~
+    system~ does~ not~ embed~ glyphs~ for~ small~ capitals.~
+    You~ can~ ignore~ this~ warning~ if~ you~ do~ not~ need~
+    \string\textsc.~ For~ more~ information,~
+    please~ refer~ to~ section~ 3.2.6~ of~ the~ documentation.
+  }
+\__nju_msg:nn { package-too-old }
+  {
+    Package~ "#1"~ is~ too~ old.\\
+    The~ "njuthesis"~ class only~ supports~ "#1"~ with~
+    a~ version~ higher~ than~ v#2.~
+    Please~ update~ an~ up-to-date~ version~ of~ it~
+    using~ your~ TeX~ package~ manager~ or~ from~ CTAN.
+  }
+\__nju_msg:nn { package-conflict }
+  {
+    The~ "#2"~ package~ is~ incompatible~ with~ "#1".\\
+    I~ have~ loaded~ "#1"~ by~ default.~ Maybe~ You~ should~
+    refer~ to~ section~ 4~ of~ the~ documentation.
+  }
+\__nju_msg:nn { missing-stzhongs }
+  {
+    "STZHONGS.TTF"~ is~ not~ found~ in~ your~ system.\\
+    The~ font~ is~ normally~ distributed~ with~ MS~ Windows.~
+    I~ have~ used~ songti~ for~ substitution.
+  }
+\cs_new:Npn \__nju_pass_option:nn #1#2 { \PassOptionsToClass {#2} {#1} }
+\cs_new:Npn \__nju_pass_option:n { \__nju_pass_option:nn { ctexbook } }
+\cs_generate_variant:Nn \__nju_pass_option:n { V }
+\cs_new:Npn \__nju_pass_option: { \__nju_pass_option:V \l_keys_key_str }
+\keys_define:nn { nju }
+  {
+    type               .choices:nn = { bachelor, master, doctor, postdoc }
+      { \int_gset_eq:NN \g__nju_info_type_int \l_keys_choice_int },
+    type               .initial:n  = bachelor,
+    degree              .choice:,
+    degree / academic     .code:n  =
+      { \bool_gset_true:N  \g__nju_opt_academic_bool },
+    degree / professional .code:n  =
+      { \bool_gset_false:N \g__nju_opt_academic_bool },
+    degree             .initial:n  = academic,
+    nl-cover         .bool_gset:N  = \g__nju_opt_nlcover_bool,
+    nl-cover           .initial:n  = false,
+    decl-page        .bool_gset:N  = \g__nju_opt_decl_bool,
+    decl-page          .initial:n  = false,
+    draft      .value_forbidden:n  = true,
+    draft                 .code:n  =
+      {
+        \bool_gset_true:N \g__nju_opt_draft_bool
+        \__nju_pass_option:
+      },
+    oneside    .value_forbidden:n  = true,
+    twoside    .value_forbidden:n  = true,
+    oneside               .code:n  =
+      {
+        \bool_gset_false:N \g__nju_opt_twoside_bool
+        \tl_gset:Nn \g__nju_name_pagemode_tl { oneside }
+        \__nju_pass_option:
+      },
+    twoside               .code:n  =
+      {
+        \bool_gset_true:N  \g__nju_opt_twoside_bool
+        \tl_gset:Nn \g__nju_name_pagemode_tl { twoside }
+        \__nju_pass_option:
+      },
+    anonymous        .bool_gset:N  = \g__nju_opt_anon_bool,
+    anonymous          .initial:n  = false,
+    latin-font         .choices:nn =
+      { fandol, gyre, mac, macoffice, win, none }
+      { \tl_gset:Nn \g__nju_font_latin_tl {#1} },
+    cjk-font           .choices:nn =
+      { fandol, founder, mac, macoffice, noto, source, win, none }
+      { \tl_gset:Nn \g__nju_font_cjk_tl   {#1} },
+    fontset            .choices:nn =
+      { fandol, mac, macoffice, win, none }
+      { \keys_set:nn { nju } { latin-font = #1, cjk-font = #1 } },
+    math-font          .choices:nn =
+      {
+        asana, cambria, fira, garamond, lm, libertinus, newcm,
+        stix, bonum, dejavu, pagella, schola, termes, xits, none
+      }
+      { \tl_gset_eq:NN \g__nju_font_math_tl  \l_keys_choice_tl },
+    math-font          .initial:n  = xits,
+    font-path             .code:n  =
+      {
+        \bool_gset_true:N \g__nju_font_path_bool
+        \tl_gset_eq:NN \g__nju_font_path_tl \l_keys_value_tl
+      },
+    zihao                 .code:n  =
+      { \__nju_pass_option:n { zihao      = #1 } },
+    zihao              .initial:n  = -4,
+    linespread            .code:n  =
+      { \__nju_pass_option:n { linespread = #1 } },
+    linespread         .initial:n  = 1.625,
+    config          .clist_gset:N  = \g__nju_config_clist
+  }
+\keys_set:nn { nju } { twoside }
+\clist_new:N \g__nju_name_optional_pkg_clist
+\cs_new_protected:Npn \__nju_define_pkg_keys:nnn #1#2#3
+  {
+    \keys_define:nn { nju }
+      {
+        #1 .bool_gset:c = { g__nju_opt_load_ #2 _bool },
+        #1   .initial:n = #3
+      }
+    \cs_new_protected:cpn { __nju_loadpkg_ #2 : }
+      {
+        \bool_if:cT { g__nju_opt_load_ #2 _bool }
+          { \RequirePackage {#1} }
+      }
+    \clist_gput_right:Nn \g__nju_name_optional_pkg_clist {#1}
+  }
+\clist_map_inline:nn
+  {
+    { biblatex       } { blx   } { true  },
+    { cleveref       } { cref  } { true  },
+    { ntheorem       } { nthm  } { true  },
+    { enumitem       } { enit  } { true  },
+    { footmisc       } { fm    } { true  },
+    { unicode-math   } { um    } { true  }
+  }
+  { \__nju_define_pkg_keys:nnn #1 }
+\keys_define:nn { nju }
+  {
+    minimal .value_forbidden:n = true,
+    minimal            .code:n =
+      {
+        \clist_map_inline:Nn \g__nju_name_optional_pkg_clist
+          { \keys_set:nn { nju } { ##1 = false } }
+        \keys_set:nn { nju } { math-font = none }
+      }
+  }
+\ProcessKeysOptions { nju }
+\bool_if:NT \g__nju_opt_anon_bool
+  { \bool_gset_false:N \g__nju_opt_decl_bool }
+\clist_map_inline:nn
+  {
+    abstract, bib, image, footer, footnote, header,
+    info, label-sep, listoffigures, listoftables,
+    math, style, theorem, tableofcontents
+  }
+  { \keys_define:nn { nju } { #1 .meta:nn = { nju / #1 } {##1} } }
+\bool_if:NTF \g__nju_opt_anon_bool
+  {
+    \cs_new:Npn \__nju_keys_set:nn #1#2
+      { \keys_set_filter:nnn {#1} { anonymous } {#2} }
+  }
+  { \cs_new_eq:NN \__nju_keys_set:nn \keys_set:nn }
+\NewDocumentCommand \njusetup { o m }
+  {
+    \tl_if_novalue:nTF {#1}
+      { \__nju_keys_set:nn { nju } {#2} }
+      {
+        \tl_if_in:nnTF {#1} { / }
+          { \__nju_keys_set:nn { nju } { #1 = {#2} } }
+          { \__nju_keys_set:nn { nju  /  #1 } {#2}   }
+      }
+  }
+\@onlypreamble \njusetup
+\NewDocumentCommand \njusetformat { m m }
+  { \__nju_define_fmt:nn {#1} {#2} }
+\NewDocumentCommand \njusetlength { s m m }
+  {
+    \bool_if:nTF {#1}
+      { \skip_gset:cn { l__nju_ #2 _skip } {#3} }
+      { \dim_gset:cn  { l__nju_ #2 _dim  } {#3} }
+  }
+\NewDocumentCommand \njusetname { s m O{} m }
+  { \__nju_set_tokenlist:nnnnn {#1} {#2} {#3} {#4} { name } }
+\NewDocumentCommand \njusettext { s m O{} m }
+  { \__nju_set_tokenlist:nnnnn {#1} {#2} {#3} {#4} { text } }
+\cs_new_protected:Npn \__nju_set_tokenlist:nnnnn #1#2#3#4#5
+  {
+    \bool_if:nTF {#1}
+      { \tl_set_eq:NN \l__nju_tmpb_tl \l__nju_name_suffix_en_tl }
+      { \tl_clear:N   \l__nju_tmpb_tl }
+    \tl_gset:cn { l__nju_ #5 _ #2 #3 \l__nju_tmpb_tl _tl } {#4}
+  }
+\__nju_pass_option:n
+  {
+    a4paper,
+    UTF8,
+    scheme = chinese,
+    fontset    = none
+  }
+\clist_map_inline:nn
+  {
+    { no-math } { fontspec },
+    { perpage } { footmisc },
+    { capitalise, nameinlink, noabbrev } { cleveref },
+    { amsmath, thmmarks, noconfig      } { ntheorem }
+  }
+  { \PassOptionsToPackage #1 }
+\LoadClass { ctexbook } [ 2018/04/01 ]
+\__nju_loadpkg_enit:
+\__nju_loadpkg_fm:
+\bool_if:NTF \g__nju_opt_load_um_bool
+  { \RequirePackage { unicode-math } }
+  {
+    \RequirePackage { amsmath }
+    \bool_if:NT \g__nju_opt_decl_bool
+      {
+        \msg_warning:nn { njuthesis } { missing-symbol }
+        \cs_new:Npn \mdwhtsquare { }
+        \cs_new:Npn \checkmark { }
+      }
+  }
+\RequirePackage
+  {
+    geometry,
+    fancyhdr,
+    setspace,
+    booktabs,
+    caption,
+    graphicx,
+  }
+\__nju_loadpkg_nthm:
+\RequirePackage { hyperref }
+\__nju_loadpkg_cref:
+\bool_if:NT \g__nju_opt_twoside_bool { \RequirePackage { emptypage } }
+\sys_if_engine_xetex:T
+  {
+    \RequirePackage { xeCJKfntef }
+    \NewDocumentCommand \njuline { m } { \CJKunderline{#1} }
+  }
+\sys_if_engine_luatex:T
+  {
+    \RequirePackage { lua-ul }
+    \NewDocumentCommand \njuline { m } { \underLine{#1} \__nju_null: }
+  }
+\cs_new:Npn \__nju_check_pkg_version:nnn #1#2#3
+  {
+    \@ifpackagelater {#1} {#2}
+      { } { \msg_error:nnnn { njuthesis } { package-too-old } {#1} {#3} }
+  }
+\sys_if_engine_luatex:T
+  { \__nju_check_pkg_version:nnn { luatexja } { 2021/10/24 } { 20211024.0 } }
+\cs_new:Npn \__nju_check_pkg_conflict:nn #1#2
+  {
+    \ctex_at_begin_package:nn {#2}
+      { \msg_warning:nnnn { njuthesis } { package-conflict } {#1} {#2} }
+  }
+\bool_if:NT \g__nju_opt_load_um_bool
+  {
+    \clist_map_inline:nn
+      {
+        amscd, amsfonts, amssymb, bbm, bm, eucal,
+        eufrak, mathrsfs, newtxmath, upgreek
+      }
+      { \__nju_check_pkg_conflict:nn { unicode-math } {#1} }
+  }
+\exp_args:Ne \file_input:n
+  {
+    njuthesis-
+    \int_case:nn { \g__nju_info_type_int }
+      {
+        { 1 } { undergraduate }
+        { 2 } { graduate      }
+        { 3 } { graduate      }
+        { 4 } { postdoctoral  }
+      }
+    .def
+  }
+\clist_map_inline:Nn \g__nju_config_clist
+  {
+    \msg_info:nnn { njuthesis } { load-config } {#1}
+    \file_input:n {#1}
+  }
+\keys_define:nn { nju / info }
+  {
+    title              .tl_gset:N = \g__nju_info_title_tl             ,
+    title              .initial:n = { 空 }                            ,
+    title*             .tl_gset:N = \g__nju_info_title_en_tl          ,
+    title*             .initial:n = { Empty }                         ,
+    keywords        .clist_gset:N = \g__nju_info_keywords_clist       ,
+    keywords*       .clist_gset:N = \g__nju_info_keywords_en_clist    ,
+    grade              .tl_gset:N = \g__nju_info_grade_tl             ,
+    student-id         .tl_gset:N = \g__nju_info_id_tl                ,
+    author             .tl_gset:N = \g__nju_info_author_tl            ,
+    author*            .tl_gset:N = \g__nju_info_author_en_tl         ,
+    department         .tl_gset:N = \g__nju_info_dept_tl              ,
+    department*        .tl_gset:N = \g__nju_info_dept_en_tl           ,
+    major*             .tl_gset:N = \g__nju_info_major_en_tl          ,
+    field              .tl_gset:N = \g__nju_info_field_tl             ,
+    field*             .tl_gset:N = \g__nju_info_field_en_tl          ,
+    major                 .code:n =
+      {
+        \bool_if:NTF \g__nju_opt_academic_bool
+          {
+            \clist_pop:NN  \l_keys_value_tl \l__nju_tmpa_tl
+            \tl_gset_eq:NN \g__nju_info_major_tl \l__nju_tmpa_tl
+          }
+          {
+            \clist_pop:NN  \l_keys_value_tl \l__nju_tmpa_tl
+            \tl_gset_eq:NN \g__nju_info_majorc_tl \l__nju_tmpa_tl
+            \clist_pop:NNTF \l_keys_value_tl \l__nju_tmpa_tl
+              { \tl_gset_eq:NN \g__nju_info_major_tl \l__nju_tmpa_tl }
+              { \tl_gset_eq:NN \g__nju_info_major_tl \g__nju_info_majorc_tl }
+          }
+      },
+    supervisor      .clist_gset:N = \g__nju_info_supv_clist           ,
+    supervisor*        .tl_gset:N = \g__nju_info_supv_en_tl           ,
+    supervisor-ii   .clist_gset:N = \g__nju_info_supvii_clist         ,
+    supervisor-ii*     .tl_gset:N = \g__nju_info_supvii_en_tl         ,
+    chairman           .tl_gset:N = \g__nju_info_chairman_tl          ,
+    reviewer        .clist_gset:N = \g__nju_info_reviewer_clist       ,
+    clc                .tl_gset:N = \g__nju_info_clc_tl               ,
+    udc                .tl_gset:N = \g__nju_info_udc_tl               ,
+    secret-level       .tl_gset:N = \g__nju_info_secretlv_tl          ,
+    supervisor-contact .tl_gset:N = \g__nju_info_supvcont_tl          ,
+    email              .tl_gset:N = \g__nju_info_email_tl             ,
+    school-code        .tl_gset:N = \g__nju_info_code_tl              ,
+    school-code        .initial:n = { 10284 }                       ,
+    degree             .tl_gset:N = \g__nju_info_degree_tl            ,
+    degree*            .tl_gset:N = \g__nju_info_degree_en_tl         ,
+  }
+\clist_map_inline:nn { submit, defend, confer, bottom }
+  {
+    \keys_define:nn { nju / info }
+      {
+        #1-date    .code:n = \__nju_date:nn {#1} {##1},
+        #1-date .initial:V = \c__nju_name_today_tl
+      }
+  }
+\clist_map_inline:Nn \c__nju_name_anon_clist
+  { \keys_define:nn { nju / info } { #1   .groups:n = { anonymous } } }
+\clist_map_inline:Nn \c__nju_name_anon_en_clist
+  { \keys_define:nn { nju / info } { #1 * .groups:n = { anonymous } } }
+\__nju_at_begin_document:n
+  {
+    \tl_gset:Ne \g__nju_info_supvfull_tl
+      { \clist_use:Nn \g__nju_info_supv_clist { \__nju_quad: } }
+    \clist_if_empty:NF \g__nju_info_supvii_clist
+      {
+        \bool_gset_true:N \g__nju_opt_supvii_bool
+        \tl_gput_right:Ne \g__nju_info_supvfull_tl
+          { \__nju_quad: \clist_use:Nn \g__nju_info_supvii_clist { \__nju_quad: } }
+      }
+    \tl_gset_eq:NN \g__nju_info_supvfull_en_tl \g__nju_info_supv_en_tl
+    \tl_if_empty:NF \g__nju_info_supvii_en_tl
+      {
+        \tl_gput_right:Ne \g__nju_info_supvfull_en_tl
+          { \__nju_quad: \g__nju_info_supvii_en_tl }
+      }
+  }
+\bool_if:NT \g__nju_opt_anon_bool
+  {
+    \tl_clear:N \l__nju_name_nju_tl
+    \tl_clear:N \l__nju_name_nju_en_tl
+  }
+\tl_const:Nn \c__nju_path_macoffice_tl
+  { /Applications/Microsoft~ Word.app/Contents/Resources/DFonts/ }
+\sys_if_platform_windows:TF
+  { \tl_gset:Nn \g__nju_font_set_tl { win } }
+  {
+    \ctex_if_platform_macos:TF
+      {
+        \file_if_exist:nTF { \c__nju_path_macoffice_tl times.ttf }
+          { \tl_gset:Nn \g__nju_font_set_tl { macoffice } }
+          { \tl_gset:Nn \g__nju_font_set_tl { mac       } }
+      }
+      { \tl_gset:Nn \g__nju_font_set_tl { fandol } }
+  }
+\tl_if_empty:NT \g__nju_font_latin_tl
+  { \tl_gset_eq:NN \g__nju_font_latin_tl \g__nju_font_set_tl }
+\tl_if_empty:NT \g__nju_font_cjk_tl
+  { \tl_gset_eq:NN \g__nju_font_cjk_tl   \g__nju_font_set_tl }
+\cs_new:Npn \__nju_loadfont_latin:n #1
+  {
+    \__fontspec_main_setmainfont:nn { } { Times~New~Roman }
+    \__fontspec_main_setsansfont:nn { } { Arial           }
+    \__fontspec_main_setmonofont:nn { Scale = MatchLowercase } {#1}
+  }
+\cs_new_protected:Npn \__nju_loadfont_latin_win:
+  { \__nju_loadfont_latin:n { Courier~New } }
+\cs_new_protected:Npn \__nju_loadfont_latin_mac:
+  {
+    \__nju_loadfont_latin:n { Menlo }
+    \fontspec_if_small_caps:F
+      {
+        \msg_warning:nn { njuthesis } { no-small-caps }
+        \__fontspec_main_setmainfont:nn
+          { \c__nju_name_gyrefeature_clist } { texgyretermes }
+      }
+  }
+\cs_new_protected:Npn \__nju_loadfont_latin_macoffice:
+  {
+    \__fontspec_main_setmainfont:nn
+      { \l__nju_name_macofficefeature_clist } { times }
+    \__fontspec_main_setsansfont:nn
+      { \l__nju_name_macofficefeature_clist } { arial }
+    \__fontspec_main_setmonofont:nn
+      { Scale     = MatchLowercase } { Menlo }
+  }
+\clist_const:Nn \c__nju_name_macofficefeature_clist
+  {
+    Path           = \c__nju_path_macoffice_tl,
+    Extension      = .ttf,
+    UprightFont    = *,
+    BoldFont       = *bd,
+    ItalicFont     = *i,
+    BoldItalicFont = *bi
+  }
+\cs_new_protected:Npn \__nju_loadfont_latin_gyre:
+  {
+    \__fontspec_main_setmainfont:nn
+      { \c__nju_name_gyrefeature_clist } { texgyretermes }
+    \__fontspec_main_setsansfont:nn
+      { \c__nju_name_gyrefeature_clist } { texgyreheros  }
+    \__fontspec_main_setmonofont:nn
+      {
+        \c__nju_name_gyrefeature_clist,
+        Scale     = MatchLowercase,
+        Ligatures = CommonOff
+      }
+      { texgyrecursor }
+  }
+\cs_new_eq:NN \__nju_loadfont_latin_fandol:  \__nju_loadfont_latin_gyre:
+\clist_const:Nn \c__nju_name_gyrefeature_clist
+  {
+    Extension      = .otf,
+    UprightFont    = *-regular,
+    BoldFont       = *-bold,
+    ItalicFont     = *-italic,
+    BoldItalicFont = *-bolditalic
+  }
+\cs_new:Npn \__nju_hide_no_script_msg:
+  { \msg_redirect_name:nnn { fontspec } { no-script } { info } }
+\cs_new:Npn \__nju_loadfont_cjk_win:N #1
+  {
+    \setCJKmainfont { SimSun   } [ #1, ItalicFont = KaiTi ]
+    \setCJKsansfont { SimHei   } [#1]
+    \setCJKmonofont { FangSong } [#1]
+    \setCJKfamilyfont { zhsong } { SimSun   } [#1]
+    \setCJKfamilyfont { zhhei  } { SimHei   } [#1]
+    \setCJKfamilyfont { zhfs   } { FangSong } [#1]
+    \setCJKfamilyfont { zhkai  } { KaiTi    } [#1]
+    \__nju_stzhongs:n {#1}
+  }
+\cs_new:Npn \__nju_loadfont_cjk_win:
+  { \__nju_loadfont_cjk_win:N \c__nju_name_fakebold_tl }
+\cs_new_protected:Npn \__nju_loadfont_cjk_mac:
+  {
+    \__nju_hide_no_script_msg:
+    \setCJKmainfont { Songti~SC~Light }
+      [
+        BoldFont       = Songti~SC~Bold,
+        ItalicFont     = Kaiti~SC,
+        BoldItalicFont = Kaiti~SC~Bold
+      ]
+    \setCJKsansfont { Heiti~SC~Light  } [ BoldFont = Heiti~SC~Medium ]
+    \setCJKmonofont { STFangsong      }
+    \setCJKfamilyfont { zhsong } { Songti~SC~Light } [ BoldFont = Songti~SC~Bold ]
+    \setCJKfamilyfont { zhhei  } { Heiti~SC~Light  } [ BoldFont = Heiti~SC~Medium ]
+    \setCJKfamilyfont { zhfs   } { STFangsong      }
+    \setCJKfamilyfont { zhkai  } { Kaiti~SC        } [ BoldFont = Kaiti~SC~Bold ]
+  }
+\cs_new:Npn \__nju_loadfont_cjk_macoffice:n #1
+  {
+    \setCJKmainfont { Simsun.ttc   } [ ItalicFont = Kaiti.ttf, #1 ]
+    \setCJKsansfont { SimHei.ttf   } [#1]
+    \setCJKmonofont { Fangsong.ttf } [#1]
+    \setCJKfamilyfont { zhsong } { Simsun.ttc   } [#1]
+    \setCJKfamilyfont { zhhei  } { SimHei.ttf   } [#1]
+    \setCJKfamilyfont { zhfs   } { Fangsong.ttf } [#1]
+    \setCJKfamilyfont { zhkai  } { Kaiti.ttf    } [#1]
+    \__nju_stzhongs:nn { STZHONGS.ttf } {#1}
+  }
+\cs_new:Npn \__nju_loadfont_cjk_macoffice:
+  {
+    \__nju_loadfont_cjk_macoffice:n
+      { Path = \c__nju_path_macoffice_tl, \c__nju_name_fakebold_tl }
+  }
+\cs_new_protected:Npn \__nju_loadfont_cjk_fandol:
+  {
+    \__nju_hide_no_script_msg:
+    \setCJKmainfont { FandolSong-Regular }
+      [
+        Extension  = .otf,
+        BoldFont   = FandolSong-Bold,
+        ItalicFont = FandolKai-Regular
+      ]
+    \setCJKsansfont { FandolHei-Regular  }
+      [
+        Extension = .otf,
+        BoldFont  = FandolHei-Bold
+      ]
+    \setCJKmonofont { FandolFang-Regular }
+      [ Extension = .otf ]
+    \setCJKfamilyfont { zhsong } { FandolSong-Regular }
+      [
+        Extension = .otf,
+        BoldFont  = FandolSong-Bold
+      ]
+    \setCJKfamilyfont { zhhei  } { FandolHei-Regular  }
+      [
+        Extension = .otf,
+        BoldFont  = FandolHei-Bold
+      ]
+    \setCJKfamilyfont { zhfs   } { FandolFang-Regular }
+      [ Extension = .otf ]
+    \setCJKfamilyfont { zhkai  } { FandolKai-Regular  }
+      [ Extension = .otf, \c__nju_name_fakebold_tl ]
+  }
+\cs_new_protected:Npn \__nju_loadfont_cjk_founder:
+  {
+    \sys_if_engine_xetex:T
+      { \xeCJKEditPunctStyle { quanjiao } { optimize-kerning = true } }
+    \sys_if_engine_luatex:T
+      { \defaultCJKfontfeatures { JFM = { zh_CN / { quanjiao, fzpr } } } }
+    \setCJKmainfont { FZShuSong-Z01  }
+      [ BoldFont = FZXiaoBiaoSong-B05, ItalicFont = FZKai-Z03 ]
+    \setCJKsansfont { FZXiHeiI-Z08   } [ BoldFont = FZHei-B01 ]
+    \setCJKmonofont { FZFangSong-Z02 }
+    \setCJKfamilyfont { zhsong } { FZShuSong-Z01  }
+      [ BoldFont = FZXiaoBiaoSong-B05 ]
+    \setCJKfamilyfont { zhhei  } { FZHei-B01      }
+      [ \c__nju_name_fakebold_tl ]
+    \setCJKfamilyfont { zhkai  } { FZKai-Z03      }
+      [ \c__nju_name_fakebold_tl ]
+    \setCJKfamilyfont { zhfs   } { FZFangSong-Z02 }
+    \defaultCJKfontfeatures { }
+  }
+\cs_new_protected:Npn \__nju_loadfont_cjk_noto:
+  {
+    \setCJKmainfont [ \c__nju_name_notofeature_clist ]
+      { NotoSerifCJKsc }
+    \setCJKsansfont [ \c__nju_name_notofeature_clist ]
+      { NotoSansCJKsc  }
+    \setCJKmonofont { Noto~Sans~Mono~CJK~SC }
+    \setCJKfamilyfont { zhsong } { Noto~Serif~CJK~SC }
+    \setCJKfamilyfont { zhhei  } { Noto~Sans~CJK~SC  }
+    \setCJKfamilyfont { zhfs   } { FZFangSong-Z02    }
+    \setCJKfamilyfont { zhkai  } { FZKai-Z03         }
+      [ \c__nju_name_fakebold_tl ]
+  }
+\cs_new_protected:Npn \__nju_loadfont_cjk_source:
+  {
+    \setCJKmainfont [ \c__nju_name_notofeature_clist ]
+      { SourceHanSerifSC }
+    \setCJKsansfont [ \c__nju_name_notofeature_clist ]
+      { SourceHanSansSC  }
+    \setCJKmonofont { FZFangSong-Z02 }
+    \setCJKfamilyfont { zhsong } { Source~Han~Serif~SC }
+    \setCJKfamilyfont { zhhei  } { Source~Han~Sans~SC  }
+    \setCJKfamilyfont { zhfs   } { FZFangSong-Z02      }
+    \setCJKfamilyfont { zhkai  } { FZKai-Z03           }
+      [ \c__nju_name_fakebold_tl ]
+  }
+\tl_const:Nn \c__nju_name_fakebold_tl { AutoFakeBold = 2.17 }
+\clist_const:Nn \c__nju_name_notofeature_clist
+  {
+    Extension          = .otf,
+    UprightFont        = *-Regular,
+    BoldFont           = *-Bold,
+    ItalicFont         = *-Regular,
+    BoldItalicFont     = *-Bold,
+    ItalicFeatures     = FakeSlant,
+    BoldItalicFeatures = FakeSlant
+  }
+\cs_new:Npn \__nju_stzhongs:nn #1#2
+  { \newCJKfontfamily \__nju_stzhongs: {#1} [#2] }
+\cs_new:Npn \__nju_stzhongs:n { \__nju_stzhongs:nn { 华文中宋 } }
+\cs_new_protected:Npn \__nju_loadfont_stzhongs:
+  {
+    \cs_if_exist_use:NF \__nju_stzhongs:
+      {
+        \fontspec_font_if_exist:nTF { 华文中宋 }
+          { \__nju_stzhongs:n { \c__nju_name_fakebold_tl } }
+          {
+            \bool_if:NTF \g__nju_font_path_bool
+              {
+                \__nju_stzhongs:nn { \l__nju_name_stzhongsfile_tl }
+                  { Path = \g__nju_font_path_tl, \c__nju_name_fakebold_tl }
+              }
+              {
+                \cs_set_eq:NN \__nju_stzhongs: \rmfamily
+                \msg_warning:nn { njuthesis } { missing-stzhongs }
+              }
+          }
+      }
+  }
+\cs_new:Npn \__nju_define_math_font:nn #1#2
+  {
+    \cs_new:cpn { __nju_loadfont_math_ #1 : }
+      { \__um_setmathfont:nn { } {#2} }
+  }
+\clist_map_inline:nn
+  {
+    { asana      } { Asana-Math.otf             },
+    { fira       } { FiraMath-Regular.otf       },
+    { garamond   } { Garamond-Math.otf          },
+    { lm         } { latinmodern-math.otf       },
+    { libertinus } { LibertinusMath-Regular.otf },
+    { stix       } { STIXMath-Regular.otf       },
+    { bonum      } { texgyrebonum-math.otf      },
+    { dejavu     } { texgyredejavu-math.otf     },
+    { pagella    } { texgyrepagella-math.otf    },
+    { schola     } { texgyreschola-math.otf     },
+    { termes     } { texgyretermes-math.otf     }
+  }
+  { \__nju_define_math_font:nn #1 }
+\cs_new:Npn \__nju_loadfont_math_cambria:
+  {
+    \bool_if:NTF \g__nju_font_path_bool
+      {
+        \__um_setmathfont:nn
+          { Path = \g__nju_font_path_tl/, FontIndex = 1 }
+          { cambria.ttc }
+      }
+      { \__um_setmathfont:nn { } { Cambria~Math } }
+  }
+\cs_new:Npn \__nju_loadfont_math_xits:
+  {
+    \bool_if:NTF \g__nju_opt_math_int_bool
+      { \tl_set:Nn  \l__nju_tmpa_tl { 8 } }
+      { \tl_clear:N \l__nju_tmpa_tl       }
+    \__um_setmathfont:nn
+      {
+        Extension    = .otf,
+        StylisticSet = \l__nju_tmpa_tl,
+        BoldFont     = XITSMath-Bold
+      }
+      { XITSMath-Regular }
+    \__um_setmathfont:nn
+      {
+        Extension    = .otf,
+        StylisticSet = 1,
+        range        = {cal,bfcal}
+      }
+      { XITSMath-Regular }
+  }
+\cs_new:Npn \__nju_loadfont_math_newcm:
+  {
+    \bool_if:NTF \g__nju_opt_math_int_bool
+      { \tl_set:Nn  \l__nju_tmpa_tl { 2 } }
+      { \tl_clear:N \l__nju_tmpa_tl       }
+    \__um_setmathfont:nn
+      {
+        Extension      = .otf,
+        StylisticSet   = \l__nju_tmpa_tl
+      }
+      { NewCMMath-Book }
+    \__um_setmathfont:nn
+      {
+        Extension      = .otf,
+        StylisticSet   = 1,
+        range          = {scr,bfscr}
+      }
+      { NewCMMath-Book }
+    \__fontspec_main_setmathrm:nn
+      {
+        Extension      = .otf,
+        UprightFont    = *-Book,
+        BoldFont       = *-Bold,
+        ItalicFont     = *-BookItalic,
+        BoldItalicFont = *-BoldItalic
+      }
+      { NewCM10 }
+    \__fontspec_main_setmathsf:nn
+      {
+        Extension      = .otf,
+        UprightFont    = *-Book,
+        BoldFont       = *-Bold,
+        ItalicFont     = *-BookOblique,
+        BoldItalicFont = *-BoldOblique
+      }
+      { NewCMSans10 }
+    \__fontspec_main_setmathtt:nn
+      {
+        Extension      = .otf,
+        UprightFont    = *-Book,
+        ItalicFont     = *-BookItalic,
+        BoldFont       = *-Bold,
+        BoldItalicFont = *-BoldOblique
+      }
+      { NewCMMono10 }
+  }
+\__nju_cs_clear:N \__nju_loadfont_math_none:
+\cs_new_protected:Npn \__nju_loadfont:
+  {
+    \use:c { __nju_loadfont_latin_ \g__nju_font_latin_tl : }
+    \use:c { __nju_loadfont_cjk_   \g__nju_font_cjk_tl   : }
+    \NewDocumentCommand \songti   { } { \CJKfamily { zhsong } }
+    \NewDocumentCommand \heiti    { } { \CJKfamily { zhhei  } }
+    \NewDocumentCommand \fangsong { } { \CJKfamily { zhfs   } }
+    \NewDocumentCommand \kaishu   { } { \CJKfamily { zhkai  } }
+    \NewDocumentCommand \bigger   { } { \ctex_zihao:n { 4   } }
+  }
+\__nju_loadfont:
+\geometry
+  {
+    vmargin    = 2.54 cm,
+    hmargin    = 3.18 cm,
+    headheight = 15 pt
+  }
+\bool_if:NT \g__nju_opt_draft_bool { \geometry { showframe } }
+\keys_define:nn { nju / header }
+  {
+    content  .clist_gset:N = \g__nju_header_twoside_clist,
+    content* .clist_gset:N = \g__nju_header_oneside_clist,
+    content     .initial:n =
+      { { EL } { \leftmark  }, { OR } { \rightmark } },
+    content*    .initial:n =
+      { {  L } { \leftmark  }, {  R } { \rightmark } }
+  }
+\keys_define:nn { nju / footer }
+  {
+    content  .clist_gset:N = \g__nju_footer_twoside_clist,
+    content* .clist_gset:N = \g__nju_footer_oneside_clist,
+    content     .initial:n = { { C } { \thepage } },
+    content*    .initial:n = { { C } { \thepage } }
+  }
+\clist_new:N \g__nju_header_clist
+\clist_new:N \g__nju_footer_clist
+\ctex_at_end_preamble:n
+  {
+    \clist_gset_eq:Nc \g__nju_header_clist
+      { g__nju_header_ \g__nju_name_pagemode_tl _clist }
+    \clist_gset_eq:Nc \g__nju_footer_clist
+      { g__nju_footer_ \g__nju_name_pagemode_tl _clist }
+  }
+\cs_new_protected:Npn \__nju_header:nn #1#2
+  { \fancyhead [#1] { \l__nju_fmt_header_tl \nouppercase {#2} } }
+\cs_new_protected:Npn \__nju_footer:nn #1#2
+  { \fancyfoot [#1] { \l__nju_fmt_footer_tl \nouppercase {#2} } }
+\fancypagestyle { plain }
+  {
+    \fancyhf { }
+    \clist_map_inline:Nn \g__nju_footer_clist { \__nju_footer:nn ##1 }
+    \tl_set:Nn \headrulewidth { \c_zero_dim }
+    \tl_set:Nn \footrulewidth { \c_zero_dim }
+  }
+\fancypagestyle { headings }
+  {
+    \fancyhf { }
+    \clist_if_empty:NTF \g__nju_header_clist
+      {
+        \tl_set:Nn \headrulewidth { \c_zero_dim }
+      }
+      {
+        \tl_set:Nn \headrulewidth { 0.4 pt }
+        \dim_set:Nn \headheight { 20 pt }
+        \clist_map_inline:Nn \g__nju_header_clist
+          { \__nju_header:nn ##1 }
+      }
+    \clist_map_inline:Nn \g__nju_footer_clist { \__nju_footer:nn ##1 }
+    \tl_set:Nn \footrulewidth { \c_zero_dim }
+  }
+\RenewDocumentCommand \frontmatter { }
+  {
     \cleardoublepage
-  \fi
-}
-\newcommand*{\makeenglishtitle}{%
-  \thispagestyle{empty}
-  \begin{center}
-    \vspace*{20pt}
-    \bf\sffamily\zihao{2}\njut@value@en@title
-    \vskip \stretch{1}
-    \normalfont\rmfamily\zihao{4}\njut@cap@cover@en@by
-    \vskip 3pt
-    \bf\sffamily\zihao{4}\njut@value@en@author
-    \vskip\stretch{1}
-    \normalfont\rmfamily\zihao{4}\njut@cap@cover@en@supervisor
-    \vskip 3pt
-    \normalfont\sffamily\zihao{4}\njut@value@en@supervisor
-    \vskip\stretch{1}
-    \normalsize\rmfamily\njut@cap@cover@en@statement
-    \vskip\stretch{2}
-    \includegraphics[width=2.5cm]{\njut@cap@institute@logo} \\
-    \vskip 3mm
-    \normalfont\njut@value@en@department\\
-    \njut@value@en@institute
-    \vskip 30pt
-    \normalfont\normalsize\njut@value@en@date
-  \end{center}
-}
-
-\newcommand*{\abstracttitlea}[1]{%
-  \renewcommand{\njut@value@abstract@titlea}{#1}%
-}
-\newcommand*{\abstracttitleb}[1]{%
-  \renewcommand{\njut@value@abstract@titleb}{#1}%
-}
-\newenvironment{abstract}{%
-  \thispagestyle{empty}
-  \phantomsection
-  \addcontentsline{toc}{chapter}{\njut@cap@abstract}
-  \begin{center}
-    {\bf\kaishu\zihao{-2}%
-	 \uuline{\njut@cap@abstract@chaptername}}
-  \end{center}
-  \vspace{3mm}
-  {\kaishu\zihao{4}%
-  \noindent\njut@cap@abstract@title{：}%
-  \njutunderline[318pt]{\njut@value@abstract@titlea}\\
-  \noindent\njutunderline[\textwidth]{\njut@value@abstract@titleb}\\
-  \noindent\njutunderline[178pt]{\njut@value@major}%
-  \njut@cap@abstract@major%
-  \njutunderline[50pt]{\njut@value@grade}%
-  \njut@cap@abstract@author{：}%
-  \njutunderline[61pt]{\njut@value@author}\\
-  \noindent\njut@cap@abstract@supervisor{：}%
-  \njutunderline[248pt]{\njut@value@supervisor}\\
+    \exp_args:NV \pagestyle \l__nju_fmt_pagestyle_tl
+    \pagenumbering { Roman }
   }
-  \vspace{5mm}
-  \begin{center}
-    {\heiti\zihao{-3}\njut@cap@abstract@abstractname}
-  \end{center}%
-  \normalsize\par%
-}{%
-  \cleardoublepage
-  \clearpage
-}
-\newcommand{\keywords}[1]{%
-  \renewcommand*{\njut@value@abstract@keywords}{#1}%
-  \par\vspace{2ex}\noindent%
-  {\bf\njut@cap@abstract@keywordsname{：}}~{#1}%
-}
-\newcommand*{\englishabstracttitlea}[1]{%
-  \renewcommand{\njut@value@abstract@en@titlea}{#1}%
-}
-\newcommand*{\englishabstracttitleb}[1]{%
-  \renewcommand{\njut@value@abstract@en@titleb}{#1}%
-}
-\newenvironment{englishabstract}{%
-  \thispagestyle{empty}
-  \phantomsection
-  \addcontentsline{toc}{chapter}{\njut@cap@abstract@en}
-  \begin{center}
-    {\bf\kaishu\zihao{-2}%
-	 \uuline{\njut@cap@abstract@en@chaptername}}
-  \end{center}
-  {\zihao{4}%
-   \njut@cap@abstract@en@title{:}~%
-   \njutunderline[360pt]{\njut@value@abstract@en@titlea}\\
-   \njutunderline[\textwidth]{\njut@value@abstract@en@titleb}\\
-   \njut@cap@abstract@en@major{:}~%
-   \njutunderline[298pt]{\njut@value@en@major}\\
-   \njut@cap@abstract@en@author{:}~%
-   \njutunderline[299pt]{\njut@value@en@author}\\
-   \njut@cap@abstract@en@supervisor{:}~%
-   \njutunderline[348pt]{\njut@value@en@supervisor}\\
+\RenewDocumentCommand \mainmatter { }
+  {
+    \cleardoublepage
+    \exp_args:NV \pagestyle \l__nju_fmt_pagestyle_tl
+    \pagenumbering { arabic }
+    \normalfont \normalsize
   }
-  \vspace{5mm}
-  \begin{center}
-    {\bf\zihao{-3}\njut@cap@abstract@en@abstractname}
-  \end{center}%
-  \normalsize\par%
-}{%
-  \cleardoublepage
-  \clearpage
-}
-\newcommand{\englishkeywords}[1]{%
-  \renewcommand*{\njut@value@abstract@en@keywords}{#1}%
-  \par\vspace{2ex}\noindent%
-  {\bf\njut@cap@abstract@en@keywordsname{:}}~~{#1}%
-}
-\newenvironment{preface}{%
-  \nchapter{\njut@cap@preface}
-}{}
-\newenvironment{acknowledgement}{%
-  \nchapter{\njut@cap@acknowledgementname}
-}{}
-\newenvironment{resume}{%
-  \nchapter{\njut@cap@resume@chaptername}
-}{}
-\newenvironment{authorinfo}{%
-  \paragraph*{\njut@cap@resume@authorinfo}
-}{}
-\newenvironment{education}{%
-  \paragraph*{\njut@cap@resume@education}
-  \begin{description}[labelindent=0em, leftmargin=8em, style=sameline]
-}{%
-  \end{description}
-}
-\newenvironment{publications}{%
-  \paragraph*{\njut@cap@resume@publications}
-  \begin{enumerate}[label=\arabic*., labelindent=0em, leftmargin=*]
-}{%
-  \end{enumerate}
-}
-\newenvironment{projects}{%
-  \paragraph*{\njut@cap@resume@projects}
-  \begin{enumerate}[label=\arabic*., labelindent=0em, leftmargin=*]
-}{%
-  \end{enumerate}
-}
-\newcommand*{\njut@cap@datefield}{%
-\njutunderline[1.5cm]{}{\njut@cap@year}%
-\njutunderline[1cm]{}{\njut@cap@month}%
-\njutunderline[1cm]{}{\njut@cap@day}
-}
-\newcommand*{\njut@license@makedeclaration}{%
-\par\zihao{-4}\njut@cap@license@declaration
-\vspace{5mm}
-\begin{flushright}
-  \njut@cap@license@sign\njutunderline[3cm]{}\\
-  \njut@cap@datefield\\
-\end{flushright}%
-}
-\newcommand*{\njut@license@maketable}{%
-\noindent\zihao{5}%
-\begin{tabular*}{\textwidth}
-    {|C{2cm}|C{2.2cm}|C{1.5cm}|C{2.1cm}|C{1.42cm}C{1.5cm}|C{1.25cm}|}
-  \hline
-  \cell{2cm}{1cm}{\njut@cap@license@title}
-  & \multicolumn{6}{c|}{\ifdefempty{\njut@value@title}{\njut@value@titlea\njut@value@titleb}{\njut@value@title}} \\
-  \hline
-  \cell{2cm}{1cm}{\njut@cap@license@studentnum}
-  & {\njut@value@studentnum}
-  & {\njut@cap@license@department}
-  & \multicolumn{2}{c|}{%
-    \cell{3.52cm}{1cm}{\njut@value@department}%
+\AtBeginEnvironment { document }
+  {
+    \exp_args:NV \pagestyle \l__nju_fmt_pagestyle_tl
+    \pagenumbering { Roman }
   }
-  & {\njut@cap@license@grade}
-  & {\njut@value@graduateyear} \\
-  \hline
-  \cell{2cm}{1.5cm}{\njut@cap@license@category}
-  & \multicolumn{3}{c}{
-    \begin{tabular*}{5.6cm}{p{3.8cm}p{2.8cm}}
-       {{\zihao{4}$\Square$}}%
-       \njut@cap@license@categorymaster
-      & {\zihao{4}$\Square$}%
-       \njut@cap@license@categorymasterspec \\
-       {{\zihao{4}$\Square$}}%
-       \njut@cap@license@categoryphd
-      & {\zihao{4}$\Square$}%
-       \njut@cap@license@categoryphdspec \\
-	  & 
-    \end{tabular*}}
-  & \multicolumn{3}{r|}{%
-    \raisebox{-2em}{\njut@cap@license@categoryhint}}\\
-  \hline
-  \cell{2cm}{1cm}{\njut@cap@license@email}
-  & \multicolumn{6}{c|}{{\njut@value@email}}  \\
-  \hline
-  \cell{2cm}{1cm}{\njut@cap@license@supervisorname}
-  & \multicolumn{6}{c|}{{\njut@value@supervisor}}\\
-  \hline
-\end{tabular*}
-}
-\newcommand*{\makelicense}{%
-  \thispagestyle{empty}
-  \nchapter{\njut@cap@license@chaptername}
-  \njut@license@makedeclaration
-  \par\vspace{2em}
-  \njut@license@maketable
-  \par\vspace{2em}
-  \noindent\njut@cap@license@securitylevel\par
-  \noindent{\zihao{4}$\Square$}
-  {\njut@cap@license@public}\par
-  \noindent{\zihao{4}$\Square$}           
-  {\njut@cap@license@secret}%
-  (\njut@cap@datefield\hspace{0.5em}%
-  \njut@cap@to\hspace{0.5em}%
-  \njut@cap@datefield)\par
-  \vspace{2em}
-  \noindent\zihao{-4}\njut@cap@license@remark%
-  \normalfont
-  \cleardoublepage
-}
-\newcommand*{\njut@statement@makedeclaration}{%
-\par\zihao{-4}\njut@cap@statement@declaration
-\vspace{5mm}
-\begin{flushright}
-  \njut@cap@license@sign\njutunderline[3cm]{}\\
-  \njut@cap@datefield\\
-\end{flushright}%
-}
-\newcommand*{\statement}{%
-  \thispagestyle{empty}
-  \nchapter{\njut@cap@statement@chaptername}
-  \njut@statement@makedeclaration
-  \normalfont
-  \cleardoublepage
-}
-%% 盲审命令，空白字段设置
-\newcommand*{\blind}
-{
-\author{}
-\telphone{}
-\email{}
-\studentnum{}
-\supervisor{}
-\supervisortelphone{}
-\major{}
-\researchfield{}
-\englishauthor{}
-\englishsupervisor{}
-\englishmajor{}
-}
-\newcommand{\njuthesis}{\texttt{NJU-Thesis}}
-\newcommand{\zhdash}{\kern0.3ex\rule[0.8ex]{2em}{0.1ex}\kern0.3ex}
-\newcommand{\cell}[3]{\parbox[c][#2][c]{#1}{\makebox[#1]{#3}}}
-\newcolumntype{C}[1]{>{\centering\let\newline\\%
-    \arraybackslash\hspace{0pt}}p{#1}}
-\newlist{arabicenum}{enumerate}{3}
-\setlist[arabicenum,1]{label=\textnormal%
-  {\textnormal{(\arabic*)}}}
-\setlist[arabicenum,2]{label=\textnormal%
-  {\textnormal{(\arabic{arabicenumi}.\arabic*)}}}
-\setlist[arabicenum,3]{label=\textnormal%
-  {\textnormal{(\arabic{arabicenumi}.\arabic{arabicenumii}.\arabic*)}}}
-\newlist{romanenum}{enumerate}{2}
-\setlist[romanenum,1]{label={\textnormal{\roman*.}}}
-\setlist[romanenum,2]{label={\textnormal{\alph*\,)}}}
-\newlist{alphaenum}{enumerate}{2}
-\setlist[alphaenum,1]{label={\textnormal{\alph*\,)}}}
-\setlist[alphaenum,2]{label={\textnormal{\alph{alphaenumi}.\arabic*\,)}}}
-\newlist{caseenum}{enumerate}{2}
-\setlist[caseenum,1]{label={\textnormal{\njut@cap@case\arabic*.}}}
-\setlist[caseenum,2]{label={\textnormal{\njut@cap@subcase\arabic{caseenumi}.\arabic*.}}}
-\setlist[caseenum]{leftmargin=*}
-\newlist{stepenum}{enumerate}{2}
-\setlist[stepenum,1]{label={\textnormal{\njut@cap@step\arabic*.}}}
-\setlist[stepenum,2]{label={\textnormal{\njut@cap@substep\arabic{stepenumi}.\arabic*.}}}
-\setlist[stepenum]{leftmargin=*}
-\newcommand*{\njut@setpdfinfo}{\hypersetup{%
-        pdftitle={\njut@value@title},
-        pdfauthor={\njut@value@author},
-        pdfsubject={\njut@cap@cover@apply},
-        pdfkeywords={\njut@value@abstract@keywords},
-        pdfcreator={\njut@value@author},
-        pdfproducer={XeLaTeX with the NJU-Thesis document class}}
-}
-\AtBeginDocument{\njut@setpdfinfo}
+\cs_new:Npn \__nju_bookmark_toc:n #1
+  { \addcontentsline { toc } { chapter } { \l__nju_fmt_chapterintoc_tl #1 } }
+\cs_generate_variant:Nn \__nju_bookmark_toc:n { V }
+\cs_new:Npn \__nju_bookmark_toc:nn #1#2
+  { \phantomsection \__nju_bookmark_toc:n {#1} }
+\cs_new:Npn \__nju_bookmark_pdf_nosec:nn { \pdfbookmark [0] }
+\cs_new:Npn \__nju_bookmark_pdf:nn
+  { \phantomsection \__nju_bookmark_pdf_nosec:nn }
+\cs_new:Npn \__nju_bookmark:Nnn #1#2#3
+  {
+    \bool_if:NTF #1
+      { \__nju_bookmark_toc:n        {#2}        }
+      { \__nju_bookmark_pdf_nosec:nn {#2} {#3} }
+  }
+\cs_new:Npn \__nju_chapter:Nnn #1#2#3
+  {
+    \chapter *           {#2}
+    \__nju_bookmark:Nnn #1  {#2} {#3}
+    \__nju_chapter_header:n {#2}
+  }
+\cs_new:Npn \__nju_chapter:n #1
+  { \__nju_chapter:Nnn \c_true_bool {#1} { } }
+\cs_generate_variant:Nn \__nju_chapter:Nnn { cnn }
+\cs_generate_variant:Nn \__nju_chapter:n   { V   }
+\cs_new_protected:Npn \__nju_chapter_header:n #1
+  {
+    \bool_if:NTF \g__nju_opt_twoside_bool
+      { \markboth {#1} {#1} }
+      { \markboth { \hfill #1 \hfill } { } }
+  }
+\NewDocumentCommand \njuchapter { m } { \__nju_chapter:n {#1} }
+\keys_set:nn { ctex }
+  {
+    chapter        / beforeskip = \l__nju_chapterbefore_dim,
+    chapter        / afterskip  = \l__nju_chapterafter_dim,
+    chapter        / format     = \l__nju_fmt_chapter_tl,
+    section        / format     = \l__nju_fmt_section_tl,
+    subsection     / format     = \l__nju_fmt_subsection_tl,
+    subsubsection  / format     = \l__nju_fmt_subsubsection_tl,
+    paragraph      / format     = \l__nju_fmt_paragraph_tl,
+    subparagraph   / format     = \l__nju_fmt_subparagraph_tl,
+    contentsname   = \l__nju_name_tableofcontents_tl,
+    listfigurename = \l__nju_name_listoffigures_tl,
+    listtablename  = \l__nju_name_listoftables_tl,
+    chapter / tocline = \l__nju_fmt_chapterintoc_tl \CTEXnumberline {#1} #2
+  }
+\cs_new_protected:Npn \__nju_make_toc:nn #1#2
+  {
+    \group_begin:
+      \keys_set:nn { ctex }
+        { chapter/format = \l__nju_fmt_toctitle_tl }
+      \__nju_chapter:cnn { g__nju_ #2 _showentry_bool } {#1} {#2}
+    \group_end:
+    \@starttoc {#2}
+  }
+\cs_generate_variant:Nn \__nju_make_toc:nn { vn }
+\cs_new_protected:Npn \__nju_define_toc_cmd:nnn #1#2#3
+  {
+    \keys_define:nn { nju / #1 }
+      {
+        toc-entry .bool_gset:c = { g__nju_ #3 _showentry_bool },
+        toc-entry   .initial:n = true
+      }
+    \exp_args:Nc \RenewDocumentCommand {#1} { }
+      { \__nju_make_toc:vn { #2 name } {#3} }
+  }
+\clist_map_inline:nn
+  {
+    { tableofcontents } { contents   } { toc },
+    { listoffigures   } { listfigure } { lof },
+    { listoftables    } { listtable  } { lot }
+  }
+  { \__nju_define_toc_cmd:nnn #1 }
+\ctex_at_end_preamble:n
+  {
+    \bool_if:NF \g__nju_toc_showentry_bool
+      {
+        \bool_gset_false:N \g__nju_lof_showentry_bool
+        \bool_gset_false:N \g__nju_lot_showentry_bool
+      }
+  }
+\keys_define:nn { nju / tableofcontents }
+  {
+    dotline         .choice:,
+    dotline / chapter .code:n =
+      {
+        \cs_set_protected_nopar:Npn \l@chapter
+          {
+            \skip_vertical:N 1.0 em \@plus \p@ \scan_stop:
+            \@dottedtocline { \z@ } { \z@ } { 1.5 em }
+          }
+      },
+    dotline / section .code:n = { }
+  }
+\clist_new:N \g__nju_blx_option_clist
+\clist_new:N \g__nju_blx_resource_clist
+\keys_define:nn { nju / bib }
+  {
+    style             .choice:,
+    style / numeric     .code:n =
+      {
+        \clist_gput_right:Nn \g__nju_blx_option_clist
+          { style = gb7714-2015      }
+      },
+    style / author-year .code:n =
+      {
+        \clist_gput_right:Nn \g__nju_blx_option_clist
+          { style = gb7714-2015ay    }
+      },
+    style / unknown     .code:n =
+      { \clist_gput_right:Nn \g__nju_blx_option_clist { style = #1 } },
+    style            .initial:n = numeric,
+    option              .code:n =
+      { \clist_gput_right:NV \g__nju_blx_option_clist \l_keys_value_tl },
+    resource            .code:n =
+      { \clist_gput_right:NV \g__nju_blx_resource_clist \l_keys_value_tl },
+  }
+\bool_if:NT \g__nju_opt_load_blx_bool
+  {
+    \NewDocumentCommand \addbibresource { m }
+      { \clist_gput_right:Nn \g__nju_blx_resource_clist {#1} }
+  }
+\cs_new_protected:Npn \__nju_blx_pre_setup:
+  {
+    \cs_undefine:N \addbibresource
+    \clist_gput_right:Nn \g__nju_blx_option_clist { backend = biber }
+    \exp_args:NV \PassOptionsToPackage \g__nju_blx_option_clist { biblatex }
+  }
+\cs_new_protected:Npn \__nju_blx_post_setup:
+  {
+    \defbibheading { njubibintoc } [ \bibname ] { \__nju_chapter:n {##1} }
+    \tl_if_eq:NnTF \blx@refsecreset@level { 2 }
+      { \DeclarePrintbibliographyDefaults { heading = subbibintoc } }
+      { \DeclarePrintbibliographyDefaults { heading = njubibintoc } }
+    \clist_map_inline:Nn \g__nju_blx_resource_clist { \addbibresource {##1} }
+  }
+\bool_if:NT \g__nju_opt_load_blx_bool
+  {
+    \BeforeBeginEnvironment { document }
+      {
+        \__nju_blx_pre_setup:
+        \RequirePackage { biblatex }
+        \__nju_blx_post_setup:
+      }
+  }
+\hypersetup
+  {
+    bookmarksnumbered = true,
+    psdextra          = true,
+    unicode           = true,
+    hidelinks
+  }
+\pdfstringdefDisableCommands
+  {
+    \clist_map_inline:nn
+      { \\, \quad, \qquad, \bigger }
+      { \__nju_cs_clear:N #1 }
+    \cs_set_eq:NN \zihao \use_none:n
+  }
+\ctex_at_end_preamble:n
+  {
+    \hypersetup
+      {
+        pdftitle    = \g__nju_info_title_tl,
+        pdfauthor   = \g__nju_info_author_tl,
+        pdfkeywords = \g__nju_info_keywords_clist,
+        pdfcreator  = \l__nju_name_pdfcreator_tl
+      }
+  }
+\cs_new:Npn \__nju_cref_name:n #1
+  { \crefname {#1} { \__nju_name:n {#1} } { \__nju_name:n {#1} } }
+\bool_if:NT \g__nju_opt_load_cref_bool
+  {
+    \crefdefaultlabelformat { #2#1#3\, }
+    \crefformat { equation      } { 公式~#2#1#3~   }
+    \crefformat { chapter       } { 第#2#1#3章     }
+    \crefformat { section       } { 第~#2#1#3~节   }
+    \crefformat { subsection    } { 第~#2#1#3~小节 }
+    \crefformat { subsubsection } { 第~#2#1#3~小节 }
+    \clist_map_inline:nn { figure, table, appendix }
+      { \__nju_cref_name:n {#1} }
+  }
+\clist_gset:Nn \g__nju_fn_ctext_option_clist { charf = \scriptsize }
+\keys_define:nn { nju / footnote }
+  {
+    style .choices:nn = { plain, pifont, circled, circled* }
+      {
+        \int_case:nnF { \l_keys_choice_int }
+          {
+            { 2 }
+              {
+                \RequirePackage { pifont }
+                \cs_set_eq:NN \__nju_fn_number:N \__nju_fn_number_pifont:N
+              }
+            { 3 }
+              {
+                \RequirePackage { circledtext }
+                \cs_set:Npn \__nju_fn_number:N
+                  { \__nju_fn_number_circled:NV \c_false_bool }
+              }
+            { 4 }
+              {
+                \RequirePackage { circledtext }
+                \cs_set:Npn \__nju_fn_number:N
+                  { \__nju_fn_number_circled:NV \c_true_bool }
+              }
+          }
+          { \cs_set_eq:NN \__nju_fn_number:N \int_use:N }
+      },
+    circledtext-option .code:n =
+      { \clist_gput_right:Nn \g__nju_fn_ctext_option_clist {#1} },
+    hang             .choice:,
+    hang / true        .code:n =
+      {
+        \cs_set:Npn \__nju_fn_hang:
+          {
+            \int_set:Nn \tex_hangafter:D { 1 }
+            \dim_set_eq:NN \tex_hangindent:D \l__nju_fnhang_dim
+          }
+      },
+    hang / false       .code:n = { \__nju_cs_clear:N \__nju_fn_hang: },
+    hang            .initial:n = true
+  }
+\cs_new:Npn \__nju_fn_number_pifont:N #1 { \ding { \int_eval:n { 171 + #1 } } }
+\cs_generate_variant:Nn \__circledtext_handle:nn { Vn }
+\cs_new_protected:Npn \__nju_fn_number_circled:Nn #1#2
+  {
+    \group_begin:
+      \bool_set_eq:NN \l__circledtext_negative_bool #1
+      \__circledtext_handle:Vn \g__nju_fn_ctext_option_clist {#2}
+    \group_end:
+  }
+\cs_generate_variant:Nn \__nju_fn_number_circled:Nn { NV }
+\cs_new_eq:NN \__nju_fn_number:N \int_use:N
+\bool_if:NT \g__nju_opt_load_fm_bool
+  {
+    \cs_set:Npn \thefootnote { \__nju_fn_number:N \c@footnote }
+    \cs_set:Npn \@makefntext #1
+      {
+        \mode_leave_vertical:
+        \hbox_to_wd:nn { \l__nju_fnhang_dim } { \@thefnmark \tex_hfil:D }
+        \tex_penalty:D \@M
+        \__nju_fn_hang:
+        #1
+      }
+  }
+\keys_define:nn { nju / image } { path .code:n = { \graphicspath {#1} } }
+\DeclareGraphicsExtensions { .pdf, .eps, .jpg, .png }
+\BeforeBeginEnvironment { tabular } { \centering \l__nju_fmt_tabular_tl }
+\ctex_at_end_package:nn { tabularray }
+  {
+    \__tblr_use_lib_booktabs:
+    \tl_set:Nn \l__nju_tmpb_tl
+      { , abovesep = 4 pt, stretch  = 0.8, cells = { font = \l__nju_fmt_tabular_tl } }
+    \tl_put_right:NV \l__tblr_default_tblr_inner_tl     \l__nju_tmpb_tl
+    \tl_put_right:NV \l__tblr_default_talltblr_inner_tl \l__nju_tmpb_tl
+    \tl_put_right:NV \l__tblr_default_longtblr_inner_tl \l__nju_tmpb_tl
+    \tl_put_right:Nn \l__tblr_default_talltblr_outer_tl { , headsep = 12.63 pt }
+    \tl_put_right:Nn \l__tblr_default_longtblr_outer_tl { , headsep = 12.63 pt }
+    \DefTblrTemplate { caption-tag } { default }
+      { \l__nju_name_table_tl \hspace { 0.25em } \thetable }
+    \DefTblrTemplate { caption-sep } { default } { \quad }
+    \DefTblrTemplate { firsthead   } { caption }
+      {
+        \makebox [ \tablewidth ]
+          { \parbox { \columnwidth } { \UseTblrTemplate {caption} {normal} } }
+      }
+    \SetTblrTemplate { firsthead   } { caption }
+    \SetTblrStyle { caption } { font = \normalfont \bfseries \small }
+    \SetTblrStyle { note    } { font = \normalfont \footnotesize    }
+    \SetTblrStyle { remark  } { font = \normalfont \footnotesize    }
+  }
+\DeclareCaptionStyle{njucap}
+  {
+    font          = {small, bf},
+    labelsep      = quad,
+    justification = centering
+  }
+\captionsetup [ figure ] { style = njucap }
+\captionsetup [ table  ] { style = njucap }
+\cs_generate_variant:Nn \ctex_patch_cmd:Nnn { cnv }
+\clist_map_inline:nn { figure, table, equation }
+  {
+    \keys_define:nn { nju / label-sep }
+      {
+        #1 .tl_gset:c = { g__nju_sep_ #1 _tl },
+        #1 .initial:n = { - }
+      }
+    \__nju_at_begin_document:n
+      { \ctex_patch_cmd:cnv { the #1 } {.} { g__nju_sep_ #1 _tl } }
+  }
+\bool_if:NT \g__nju_opt_load_enit_bool { \setlist { noitemsep } }
+\bool_if:NTF \g__nju_opt_load_um_bool
+  { \tl_const:Nn \c__nju_name_qed_tl { \ensuremath { \mdlgwhtsquare    } } }
+  { \tl_const:Nn \c__nju_name_qed_tl { \ensuremath { \rule {1ex} {1ex} } } }
+\tl_new:N \l__nju_thm_share_tl
+\keys_define:nn { nju / theorem }
+  {
+    style           .tl_set:N = \l__nju_thm_style_tl,
+    header-font     .tl_set:N = \l__nju_thm_header_font_tl,
+    body-font       .tl_set:N = \l__nju_thm_body_font_tl,
+    qed-symbol      .tl_set:N = \l__nju_thm_qed_symbol_tl,
+    counter         .tl_set:N = \l__nju_thm_counter_tl,
+    style          .initial:n = plain,
+    header-font    .initial:n = \normalfont \bfseries,
+    body-font      .initial:n = \itshape,
+    qed-symbol     .initial:V = \c__nju_name_qed_tl,
+    counter        .initial:n = chapter,
+    type        .clist_gset:N = \g__nju_thm_type_clist,
+    type           .initial:n =
+      {
+        { axiom      } { 公理 },
+        { corollary  } { 推论 },
+        { definition } { 定义 },
+        { example    } { 例   },
+        { lemma      } { 引理 },
+        { proof, *+  } { 证明 },
+        { theorem    } { 定理 }
+      },
+    share-counter .bool_set:N = \l__nju_thm_share_bool,
+    share-counter  .initial:n = false,
+    define .value_forbidden:n = true,
+    define            .code:n =
+      {
+        \clist_if_empty:NT \g__nju_thm_type_clist
+          { \msg_error:nn { njuthesis } { empty-theorem-type } }
+        \tl_clear:N \l__nju_thm_share_tl
+        \clist_map_inline:Nn \g__nju_thm_type_clist
+          { \__nju_thm_define:Nnn \l__nju_thm_share_tl ##1 }
+      }
+  }
+\cs_new:Npn \__nju_thm_define:Nnn
+  { \__nju_thm_define:NNNNnn \l__nju_tmp_clist \l__nju_tmpa_tl \l__nju_tmpb_tl }
+\cs_new:Npn \__nju_thm_define:NNNNnn #1#2#3#4#5#6
+  {
+    \bool_if:NF \g__nju_opt_load_nthm_bool
+      { \msg_error:nn { njuthesis } { missing-ntheorem } }
+    \exp_args:NV \theoremstyle      \l__nju_thm_style_tl
+    \exp_args:NV \theoremheaderfont \l__nju_thm_header_font_tl
+    \exp_args:NV \theorembodyfont   \l__nju_thm_body_font_tl
+    \clist_set:Nn #1 {#5}
+    \clist_pop:NN #1 #2
+    \clist_pop:NN #1 #3
+    \tl_if_in:NnT  #3 { + }
+      { \exp_args:NV \theoremsymbol \l__nju_thm_qed_symbol_tl }
+    \tl_if_in:NnTF #3 { * }
+      { \__nju_thm_new:VVVn #2 \c_novalue_tl        #4 {#6} }
+      { \__nju_thm_new:VVVn #2 \l__nju_thm_counter_tl #4 {#6} }
+    \bool_if:NT \l__nju_thm_share_bool
+      {
+        \tl_gset_eq:NN #4 #2
+        \bool_gset_false:N \l__nju_thm_share_bool
+      }
+    \bool_if:NT \g__nju_opt_load_cref_bool
+      { \exp_args:NV \crefname #2 {#6} {#6} }
+    \theoremsymbol { }
+  }
+\cs_new_protected:Npn \__nju_thm_new:nnnn #1#2#3#4
+  {
+    \group_begin:
+      \cs_if_exist:cT { end #1 }
+        { \cs_set_eq:NN \newtheorem \renewtheorem }
+      \tl_if_novalue:nTF {#2}
+        { \newtheorem * {#1} {#4} }
+        {
+          \tl_if_empty:nTF {#3}
+            { \newtheorem {#1}      {#4} [#2] }
+            { \newtheorem {#1} [#3] {#4}      }
+        }
+    \group_end:
+  }
+\cs_generate_variant:Nn \__nju_thm_new:nnnn { VVVn }
+\bool_new:N \g__nju_opt_math_re_bool
+\bool_new:N \g__nju_opt_math_int_bool
+\bool_new:N \g__nju_opt_math_leq_bool
+\bool_new:N \g__nju_opt_math_vec_bool
+\bool_if:NTF \g__nju_opt_load_um_bool
+  { \tl_set_eq:NN \l__nju_name_integral_tl \l__um_nolimits_tl }
+  { \tl_set_eq:NN \l__nju_name_integral_tl \c_empty_tl        }
+\bool_if:NTF \g__nju_opt_load_um_bool
+  { \cs_new:Npn   \__nju_um_setup:n #1 { \keys_set:nn { unicode-math } {#1} } }
+  { \cs_new_eq:NN \__nju_um_setup:n \use_none:n }
+\keys_define:nn { nju / math }
+  {
+    integral                      .choice:,
+    integral / upright              .code:n  =
+      { \bool_gset_true:N  \g__nju_opt_math_int_bool },
+    integral / slanted              .code:n  =
+      { \bool_gset_false:N \g__nju_opt_math_int_bool },
+    integral-limits               .choice:,
+    integral-limits / true          .code:n  =
+      { \tl_clear:N   \l__um_nolimits_tl },
+    integral-limits / false         .code:n  =
+      { \tl_set_eq:NN \l__um_nolimits_tl \l__nju_name_integral_tl },
+    less-than-or-equal            .choice:,
+    less-than-or-equal / slanted    .code:n  =
+      { \bool_gset_true:N  \g__nju_opt_math_leq_bool },
+    less-than-or-equal / horizontal .code:n  =
+      { \bool_gset_false:N \g__nju_opt_math_leq_bool },
+    math-ellipsis                 .choice:,
+    math-ellipsis / centered        .code:n  =
+      {
+        \DeclareRobustCommand \mathellipsis
+          { \mathinner { \unicodecdots    } }
+      },
+    math-ellipsis / lower           .code:n  =
+      {
+        \DeclareRobustCommand \mathellipsis
+          { \mathinner { \unicodeellipsis } }
+      },
+    partial                      .choices:nn =
+      { upright, italic } { \__nju_um_setup:n { partial = #1 } },
+    real-part                     .choice:,
+    real-part / roman               .code:n  =
+      { \bool_set_true:N  \g__nju_opt_math_re_bool },
+    real-part / fraktur             .code:n  =
+      { \bool_set_false:N \g__nju_opt_math_re_bool },
+    vector                        .choice:,
+    vector / boldfont               .code:n  =
+      { \bool_gset_true:N  \g__nju_opt_math_vec_bool },
+    vector / arrow                  .code:n  =
+      { \bool_gset_false:N \g__nju_opt_math_vec_bool },
+    uppercase-greek               .choice:,
+    uppercase-greek / upright       .code:n  =
+      { \__nju_um_setup:n { math-style = ISO } },
+    uppercase-greek / italic        .code:n  =
+      { \__nju_um_setup:n { math-style = TeX } },
+    style                         .choice:,
+    style / TeX                     .code:n  =
+      {
+        \keys_set:nn { nju / math }
+          {
+            integral           = slanted,
+            integral-limits    = false,
+            less-than-or-equal = horizontal,
+            math-ellipsis      = centered,
+            partial            = italic,
+            real-part          = fraktur,
+            vector             = arrow,
+            uppercase-greek    = upright
+          }
+        \__nju_um_setup:n { bold-style = TeX }
+      },
+    style / ISO                     .code:n  =
+      {
+        \keys_set:nn { nju / math }
+          {
+            integral           = upright,
+            integral-limits    = true,
+            less-than-or-equal = horizontal,
+            math-ellipsis      = lower,
+            partial            = upright,
+            real-part          = roman,
+            vector             = arrow,
+            uppercase-greek    = italic
+          }
+        \__nju_um_setup:n { bold-style = ISO }
+      },
+    style / GB                      .code:n  =
+      {
+        \keys_set:nn { nju / math }
+          {
+            integral           = upright,
+            integral-limits    = false,
+            less-than-or-equal = slanted,
+            math-ellipsis      = centered,
+            partial            = upright,
+            real-part          = roman,
+            vector             = boldfont,
+            uppercase-greek    = italic
+          }
+        \__nju_um_setup:n { bold-style = ISO }
+      },
+    style                        .initial:n  = GB
+  }
+\bool_if:NT \g__nju_opt_load_um_bool
+  {
+    \__nju_at_begin_document:n
+      {
+        \use:c { __nju_loadfont_math_ \g__nju_font_math_tl : }
+        \bool_if:NT \g__nju_opt_math_leq_bool
+          {
+            \cs_set_eq:NN \le  \leqslant
+            \cs_set_eq:NN \ge  \geqslant
+            \cs_set_eq:NN \leq \leqslant
+            \cs_set_eq:NN \geq \geqslant
+          }
+        \bool_if:NT \g__nju_opt_math_re_bool
+          {
+            \cs_set:Npn \Re { \operatorname { Re } }
+            \cs_set:Npn \Im { \operatorname { Im } }
+          }
+        \bool_if:NT \g__nju_opt_math_vec_bool
+          { \cs_set_eq:NN \vec \symbf }
+      }
+  }
+\cs_new_protected:Npn \__nju_new_img_cmd:nn #1#2
+  {
+    \exp_args:Nc \NewDocumentCommand { nju #1 } { o m m }
+      { \includegraphics [ width = ##2, height = ##3 ] {#2} }
+  }
+\keys_define:nn { nju / image }
+  {
+    nju-emblem .code:n = { \__nju_new_img_cmd:nn { emblem } {#1} },
+    nju-name   .code:n = { \__nju_new_img_cmd:nn { name   } {#1} }
+  }
+\ctex_at_end_preamble:n
+  {
+    \bool_lazy_and:nnF
+      { \cs_if_exist_p:N \njuemblem }
+      { \cs_if_exist_p:N \njuname   }
+      {
+        \cs_undefine:N \njuemblem
+        \cs_undefine:N \njuname
+        \msg_warning:nn { njuthesis } { missing-image }
+        \RequirePackage { njuvisual }
+      }
+    \bool_if:NT \g__nju_opt_anon_bool
+      {
+        \RenewDocumentCommand \njuemblem { o m m } { }
+        \RenewDocumentCommand \njuname   { o m m } { }
+      }
+  }
+\RenewDocumentCommand \maketitle { }
+  {
+    \bool_if:NF \g__nju_opt_draft_bool
+      {
+        \pagenumbering { gobble }
+        \__nju_make_cover:
+      }
+    \tl_gremove_all:Nn \g__nju_info_title_tl    { \\ }
+    \tl_gremove_all:Nn \g__nju_info_title_en_tl { \\ }
+    \bool_lazy_and:nnT
+      { ! \g__nju_opt_draft_bool }
+      {   \g__nju_opt_decl_bool  }
+      { \__nju_make_decl_i: \__nju_make_decl_ii: }
+    \cleardoublepage
+    \exp_args:NV \pagestyle \l__nju_fmt_pagestyle_tl
+    \pagenumbering { Roman }
+  }
+\cs_new_protected:Npn \__nju_print_keywords:nn
+  { \__nju_print_keywords:NNnn \l__nju_tmpa_tl \l__nju_tmpa_dim }
+\cs_new:Npn \__nju_print_keywords:NNnn #1#2#3#4
+  {
+    \tl_set:Nv #1 { l__nju_name_keywords #3 _tl }
+    \exp_args:NNv \tl_put_left:Nn  #1 { l__nju_fmt_abslabel #3 _tl }
+    \exp_args:NNv \tl_put_right:Nn #1 { l__nju_name_colon   #3 _tl }
+    \__nju_get_width:NV #2 #1
+    \list {#1}
+      {
+        \labelwidth  #2
+        \labelsep    \c_zero_dim
+        \leftmargin  \c_zero_dim
+        \rightmargin \c_zero_dim
+        \advance \leftmargin #2
+        \__nju_cs_clear:N \makelabel
+      }
+    \item \clist_use:cn { g__nju_info_keywords #3 _clist } {#4}
+    \endlist
+  }
+\skip_new:N \g__nju_abs_title_left_skip
+\keys_define:nn { nju / abstract }
+  {
+    toc-entry         .bool_gset:N = \g__nju_abs_showentry_bool,
+    toc-entry           .initial:n = true,
+    underline         .bool_gset:N = \g__nju_abs_underline_bool,
+    underline           .initial:n = true,
+    title-style          .choice:,
+    title-style / strict   .code:n =
+      {
+        \bool_gset_true:N  \g__nju_abs_title_strict_bool
+        \skip_gset:Nn \g__nju_abs_title_left_skip { .5 em }
+      },
+    title-style / centered .code:n =
+      {
+        \bool_gset_true:N \g__nju_abs_title_strict_bool
+        \skip_gset:Nn \g__nju_abs_title_left_skip { .5 em plus 1 fill }
+      },
+    title-style / natural  .code:n =
+      {
+        \bool_gset_false:N \g__nju_abs_title_strict_bool
+        \skip_gset:Nn \g__nju_abs_title_left_skip { .5 em plus 1 fill }
+      },
+    title-style         .initial:n = strict
+  }
+\NewDocumentEnvironment { abstract } { +b }
+  {
+    \cleardoublepage
+    \thispagestyle { plain }
+    \__nju_abs_bookmark:Vn \l__nju_name_abstracta_tl { abstract }
+    \tl_gremove_all:Nn \g__nju_info_title_tl { \\ }
+    \__nju_make_abstract:
+    \group_begin: \kaishu \zihao { -4 } #1
+  }
+  { \__nju_print_keywords:nn { } { ； } \group_end: }
+\NewDocumentEnvironment { abstract* } { +b }
+  {
+    \cleardoublepage
+    \thispagestyle { plain }
+    \__nju_abs_bookmark:Vn \l__nju_name_abstracta_en_tl { abstract-en }
+    \tl_gremove_all:Nn \g__nju_info_title_en_tl { \\ }
+    \__nju_make_abstract_en:
+    \group_begin: \zihao { -4 } #1
+  }
+  { \__nju_print_keywords:nn { _en } { ;~ } \group_end: }
+\NewDocumentEnvironment { preface         } { +b }
+  { \__nju_chapter:V \l__nju_name_preface_tl #1 }
+  { \cleardoublepage }
+\NewDocumentEnvironment { acknowledgement } { +b }
+  {
+    \bool_if:NTF \g__nju_opt_anon_bool
+      { \__nju_bookmark_toc:V \l__nju_name_acknowledgementa_tl   }
+      { \__nju_chapter:V      \l__nju_name_acknowledgement_tl #1 }
+  }
+  { \cleardoublepage }
+\NewDocumentCommand \njupaperlist
+  { O { \l__nju_name_paperlist_tl } m }
+  {
+    \group_begin:
+      \RenewDocumentCommand \mkbibnamegiven  { m }
+        { \ifitemannotation { thesisauthor }
+            { \njuline { \bf ##1 } } {##1} }
+      \RenewDocumentCommand \mkbibnamefamily { m }
+        { \ifitemannotation { thesisauthor }
+            { \njuline { \bf ##1 } } {##1} }
+      \RenewDocumentCommand \mkbibdateshort { m m m }
+        { \textbf { \thefield {##1} } }
+      \newrefsection
+      \nocite {#2}
+      \printbibliography [ heading = subbibliography, title = #1 ]
+      \endrefsection
+    \group_end:
+  }
+\cs_new_protected:Npn \__nju_notation_label:n #1 { #1 \tex_hfil:D }
+\cs_new_protected:Npn \__nju_make_notation:nn #1#2
+  {
+    \dim_set:Nn \l__nju_tmpa_dim { \textwidth - #1 - #2 }
+    \list { }
+      {
+        \labelwidth #2
+        \labelsep   \c_zero_dim
+        \itemsep    \c_zero_dim
+        \parsep     \c_zero_dim
+        \leftmargin .5\l__nju_tmpa_dim
+        \rightmargin \leftmargin
+        \advance \leftmargin #2
+        \cs_set_eq:NN \makelabel \__nju_notation_label:n
+      }
+  }
+\NewDocumentEnvironment { notation } { O { 10 em } O { 5 em } }
+  {
+    \__nju_chapter:V \l__nju_name_notation_tl
+    \__nju_make_notation:nn {#1} {#2}
+  }
+  { \endlist \cleardoublepage }
+\NewDocumentEnvironment { notation* } { O { 10 em } O { 5 em } }
+  {
+    \chapter * { \l__nju_name_notation_tl }
+    \__nju_make_notation:nn {#1} {#2}
+  }
+  { \endlist \cleardoublepage }
 \endinput
 %%
 %% End of file `njuthesis.cls'.
