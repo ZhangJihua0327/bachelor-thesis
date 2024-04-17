@@ -2,7 +2,8 @@
     type = bachelor,
     degree = academic,
     twoside,
-    fontset = win
+    fontset = win,
+    decl-page
 ]
 {njuthesis}
 
@@ -13,16 +14,32 @@
 \usepackage{subcaption} % 嵌套小幅图像，比 subfig 和 subfigure 更新更好
 \usepackage{siunitx} % 标准单位符号
 
+\newcommand{\TLA}{TLA\textsuperscript{+}\ }
+
 \begin{document}
 % 封面
 \maketitle
 
 \begin{abstract}
-    中文摘要
+    分布式协议以及分布式系统，在当今的计算机世界不可或缺。自动化地对分布式协议验证其正确性是一个重要且困难的挑战。
+    为了验证分布式协议的正确性，我们可以尝试证明分布式协议的每一个状态都满足一个预先给定的不变式，即安全属性(safety property)。
+    对于复杂系统，我们无法像验证简单系统，通过遍历所有状态的方式来验证安全属性。
+    过去的研究中往往采用寻找一个蕴含着安全属性的不变式的方式来验证协议的正确性，这个不变式经过所有可能的状态转移后仍然能保持其自身的正确性。这个不变式被称为归纳不变式。
+    自动化地寻找或者生成分布式协议的归纳不变式是验证自动化分布式协议正确性的关键步骤。
+
+    以往的研究主要基于的IVy进行实现，\TLA 语言领域的相关研究较少。本文将提供一种基于\TLA 的归纳不变式生成工具，实现对以\TLA 语言描述的分布式协议规约的归纳不变式的自动化生成。
 \end{abstract}
   
 \begin{abstract*}
-    English abstract
+    Distributed Protocols and distributed systems are indispensable in today's computer world. Automatically verifying the correctness of distributed protocols is an important and challenging task.
+    To verify the correctness of distributed protocols, we can try to prove that every state of the distributed protocol satisfies a pre-defined invariant, a safety property.
+    For complex systems, we cannot verify safety properties by traversing all states as we do for simple systems.
+    Researchers often use the method of finding an invariant that implies the safety property, which remains correct after all possible state transitions. This invariant is called an inductive invariant.
+    Automatically finding or generating inductive invariants for distributed protocols is a key step in verifying the correctness of automated distributed protocols.
+
+    Previous research is mainly based on IVy for implementation, few on \TLA. 
+    This paper will provide an inductive invariant generation tool based on \TLA, which realizes the automatic generation of inductive invariants for distributed protocol specifications described in \TLA language.
+    
 \end{abstract*}
 
 % 目录
@@ -30,7 +47,7 @@
 
 % 正文
 \mainmatter
-\cite{DistAI}
+
 % 生成参考文献页
 \printbibliography
 

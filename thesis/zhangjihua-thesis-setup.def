@@ -5,8 +5,8 @@
     title* = {Automatic Inductive Invariants Learning for TLA\textsuperscript{+} Specifications},
     author = {张继华},
     author* = {Jihua Zhang},
-    keywords = {我,就是,充数的,关键词},
-    keywords* = {Dummy,Keywords,Here,{It Is}},
+    keywords = {TLA\textsuperscript{+}, IVy, 分布式系统, 形式化验证, 强化学习},
+    keywords* = {TLA\textsuperscript{+}, IVy, Distributed System, Formal Verification, Reinforcement Learning},
     grade = {2020},
     student-id = {201250040},
     department = {软件学院},
@@ -14,7 +14,7 @@
     major* = {Software Engineering},
     supervisor = {魏恒峰,助理研究员},
     supervisor*= {Hengfeng Wei, Research Assistant},
-    submit-date = {2022-05-20},
+    submit-date = {2024-05-20},
     % 提交日期
     supervisor-contact = {
         南京大学~
