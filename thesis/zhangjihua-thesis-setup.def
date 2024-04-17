@@ -68,7 +68,7 @@
 
 % abstract 类用于设置摘要样式
 \njusetup[abstract]{
-    toc-entry = false,
+    toc-entry = true,
     % 摘要是否显示在目录条目中
     %
     % underline = false,
