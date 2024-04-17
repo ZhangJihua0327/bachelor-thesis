@@ -1,0 +1,41 @@
+\documentclass[
+    type = bachelor,
+    degree = academic,
+    twoside,
+    fontset = win
+]
+{njuthesis}
+
+\input{zhangjihua-thesis-setup.def}
+
+\usepackage{listings} % 展示代码
+\usepackage{algorithm,algorithmic} % 展示算法伪代码
+\usepackage{subcaption} % 嵌套小幅图像，比 subfig 和 subfigure 更新更好
+\usepackage{siunitx} % 标准单位符号
+
+\begin{document}
+% 封面
+\maketitle
+
+\begin{abstract}
+    中文摘要
+\end{abstract}
+  
+\begin{abstract*}
+    English abstract
+\end{abstract*}
+
+% 目录
+\tableofcontents
+
+% 正文
+\mainmatter
+\cite{DistAI}
+% 生成参考文献页
+\printbibliography
+
+\begin{acknowledgement}
+    致谢
+\end{acknowledgement}
+
+\end{document}
