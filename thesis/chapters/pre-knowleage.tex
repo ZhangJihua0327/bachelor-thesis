@@ -10,7 +10,7 @@
 \end{figure}
 
 \section{\texorpdfstring{TLA\textsuperscript{+}}{TLA+}}
-\href{https://lamport.azurewebsites.net/tla/tla.html}{\TLA} \cite{TLA, tla+toolbox}是由计算机科学家 Leslie Lamport 主导开发的，
+\href{https://lamport.azurewebsites.net/tla/tla.html}{\TLA} \cite{TLA}是由计算机科学家 Leslie Lamport 主导开发的，
 用于对计算机程序和系统建模，尤其是对并行系统和分布式系统建模的高级语言。
 它是基于使用简单的数学语言来精确描述系统行为的理念开发的。
 因此，\TLA 的表达方式和一般的编程语言有很大的不同，反而和数学语言更为接近。
@@ -22,14 +22,16 @@
 
 开发者使用 \TLA 或者其他工具来对分布式协议进行建模的代码，我们将其称之为规约(specification，简称spec)。
 图 \ref{fig:client_server} 展示了一个简单的 \TLA 规约，其中包含了一个简单的客户端和服务器的通信协议。
-其中两个重要的表达式是 \textit{Init} 和 \textit{Next}。
-\textit{Init} 表示系统的初始状态，描述系统最开始时的状态；
-而\textit{Next} 则是表示系统的状态是如何转移，也就是系统的状态在每个时间片后会发生怎样的变化。
+其中两个重要的谓词是 $Init$ 和 $Next$。
+$Init$ 表示系统的初始状态，描述系统最开始时的状态；
+而$Next$ 则是表示系统的状态是如何转移，也就是系统的状态在每个时间片后会发生怎样的变化。
+在这个规约中，其他的谓词还有$Connect, Disconnect$ 等，定义这些谓词，就像在一般的编程语言中定义函数一样，方便阅读和重复使用。
+一些规约中还有谓词 $TypeOK$，用于约束变量的类型。
 另一种在自动归纳不变式生成研究中常常使用的工具，IVy，也有相似的语法和结构。
 可以看到的是，\TLA 更关注系统的状态和系统状态是发生怎样的转移，对于系统状态转移的具体过程，\TLA 并不关心。
 这样的描述方式和状态机非常相似。
 
-\textit{Safety} 是安全属性(safety property)，一个正确定义的分布式协议规约，应当在每个可达的状态下都满足安全属性。
+谓词$Safety$ 是安全属性(safety property)，一个正确定义的分布式协议规约，应当在每个可达的状态下都满足安全属性。
 这个变量在自动化生成归纳不变式的研究中非常关键。
 
 TLC 是 \TLA 集成的模型检测工具。它的实现方式是通过模拟规约运行的方式，遍历规约中每一个可能的状态和状态转移，
@@ -41,7 +43,7 @@ tex 用于将\TLA 美化打印的工具等，这些工具与本文所讨论的�
 
 \section{归纳不变式}
 验证分布式协议的正确性，就是验证协议定义的安全属性(safety property)是否在每个可达的状态下都成立。
-在 \textit{Client\_Server} 规约中，我们可以看到 \textit{Safety} 是一个安全属性，
+在 \textit{Client\_Server} 规约中，我们可以看到 $Safety$ 是一个安全属性，
 它表达的是，在任何状态下，如果两个客户端同时连接有同一个服务器，那么这两个客户端是同一个客户端。
 换言之，两个不同的客户端不能连接到同一个服务器。
 
