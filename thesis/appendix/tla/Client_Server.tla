@@ -24,7 +24,7 @@ Next ==
 Spec == Init /\ [][Next]_<<locked, held>>
 
 Safe == 
-    \A client_eii, client_j \in Client:
+    \A client_i, client_j \in Client:
     (held[client_i] \cap held[client_j] # {}) \/ (client_i = client_j)
 
 =============================================================================
