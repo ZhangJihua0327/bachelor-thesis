@@ -305,3 +305,7 @@ thesis/zhangjihua-thesis.pdf
 # ignore all file in thesis/appendix/tla except .tla file
 thesis/appendix/tla/*
 !thesis/appendix/tla/*.tla
+
+# ignore all file in thesis/appendix/plantuml except .puml file
+thesis/appendix/plantuml/*
+!thesis/appendix/plantuml/*.puml
