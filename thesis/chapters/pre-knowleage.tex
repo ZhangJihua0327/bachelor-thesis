@@ -81,21 +81,31 @@ $Ind'$表达谓词$Ind$经过状态转移后的变量的状态。
 但是，尤其是对于越复杂的系统而言，寻找归纳不变式并不是一个简单的任务。
 实现归纳不变式的自动生成是形式化验证领域一个重要的研究目标，这也是本文研究的内容。
 
-\section{Apalache}
-Apalache\cite{apalache1, apalache2} 是一个面向\TLA 规约的模型检查器(model checker)。
-与 TLC 不同的是，Apalache 并不是通过遍历所有可能的状态来检验安全属性是否成立，而是通过 SMT solver 来检验，
+\section{TLC 和 Apalache}
+TLC和Apalache是两个常见的面向\TLA 规约的模型检查工具(model checker)。
+
+\subsection{TLC}
+TLC既是对\TLA 规约的模型检查工具，也是一个面向规约的模拟器。
+它是一个显式状态模型检查器，依照用户给出的规约和设置，搜索所有满足约束的状态和状态转移，
+并在这个过程中检查安全属性和其他用户定义的谓词逻辑时时是否成立。
+如果遇到错误，TLC会将错误的状态和状态转移过程输出，以便用户进行分析。
+
+TLC可以通过使用超过32个计算机线程以获得近乎线性的加速。
+它可以通过在分布式部署的计算机网络上运行来进一步加速模型检查，并提供在云系统上的轻松部署
+
+\subsection{Apalache}
+Apalache\cite{apalache1, apalache2} 和 TLC 不同的是，Apalache 并不是通过遍历所有可能的状态来检验安全属性是否成立，而是通过 SMT solver 来检验，
 而是将\TLA 规约转换为 SMT 问题，然后使用 SMT solver (如Z3\cite{z3})求解来检验安全属性是否成立。
 Apalaches 是一种符号检查器，它和 SMT solver 一样基于逻辑推理和公式求解实现的。
-故而，Apalache相较于TLC，更适合用于归纳不变式的搜索和验证工作。
 Apalache 对\TLA 源文件的语法中引入了一些限制，
-尽管没有完全支持\TLA 的所有语法，但是这方便了 SMT 求解器进行求解。
+尽管没有完全支持\TLA 的所有语法，但是这方便使用 SMT 求解器进行求解。
 
 \TLA 是一个“弱类型”的编程语言，它对变量没有严格的类型注明。
 但是，Apalache 需要了解\TLA 规约中变量的类型才能工作。
 尽管 Apalache 有一套自己的类型推断系统，但是，它并不能完全解决所有的类型推断问题。
 这使得用户，对于某些协议，需要以注释的形式来提供变量的类型，才能交给Apalache进行处理。
 
-% 补充关于 返回结果和CTI的内容
+% 补充关于 返回结果和CTI的内容?
 
 \section{强化学习}
 强化学习(Reinforcement learning, RL)\cite{rl}是机器学习的一个领域，强调如何基于外部环境做出决策，以获得最大化的预期累积奖励。
@@ -107,7 +117,7 @@ Apalache 对\TLA 源文件的语法中引入了一些限制，
 因为很多强化学习算法在这种假设下才能使用动态规划的方法。
 传统的动态规划方法和强化学习算法的主要区别是，后者不需要关于MDP的知识，而且针对无法找到确切方法的大规模MDP。
 
-\begin{figure}
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.6\textwidth]{figures/Reinforcement_learning_diagram.pdf}
     \caption{强化学习框架}
