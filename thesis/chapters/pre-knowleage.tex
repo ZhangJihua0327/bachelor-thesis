@@ -38,7 +38,7 @@ TLC 是 \TLA 集成的模型检测工具。它的实现方式是通过模拟规�
 在每个状态下检验安全属性是否成立。
 TLC 是一个强大的工具，但是对于复杂的系统，TLC 的运行时间会非常长，这也使得它在证明不变式时，会出现空间爆炸的问题。
 
-除了 TLC 以外，\TLA toolbox\cite{tla+toolbox} 还集成有PlusCal和TLAPS用于命题证明工具，sany用于语法检查工具，
+除了 TLC 以外，\TLA toolbox\cite{tla+toolbox} 还集成有PlusCal\cite{PlusCal}和TLAPS用于命题证明工具，sany用于语法检查工具，
 tex 用于将\TLA 美化打印的工具等，这些工具与本文所讨论的问题相关性不高，不展开讨论。
 
 \section{归纳不变式}
@@ -52,20 +52,60 @@ tex 用于将\TLA 美化打印的工具等，这些工具与本文所讨论的�
 通过简单的遍历的方式来验证系统的正确性，是不现实的。
 寻找一个能够蕴含安全属性的不变式，并且能够在所有可能的状态转移后保持其自身的正确性，这个不变式被称为归纳不变式。
 以数学的语言表示为：
-\begin{equation}
-\begin{aligned}
-    &Init \Rightarrow Ind \\
-    &Ind \land Next \Rightarrow Ind'\\
-    &Ind \Rightarrow Safety
-\end{aligned}
-\end{equation}
+\begin{align}
+    &Init \Rightarrow Ind \label{con:init}\\
+    &Ind \land Next \Rightarrow Ind' \label{con:inductive}\\
+    &Ind \Rightarrow Safety \label{con:safety}
+\end{align}
 其中$Init$ 是初始状态，$Next$ 是状态转移，$Safety$ 是安全属性，$Ind$ 是归纳不变式，
-$Ind'$表达的是这个式子经过状态转移后的状态仍然成立。
-也就是说，归纳不变式在规约的初始状态下成立，且从一个状态到另一个状态的转移后，归纳不变式仍然成立。
-归纳不变式蕴含安全属性，也就是说，如果归纳不变式成立，那么安全属性也成立。
+$Ind'$表达谓词$Ind$经过状态转移后的变量的状态。
+定理\ref{con:init}表明归纳不变式在初始状态下成立；
+定理\ref{con:inductive}表明归纳不变式在状态转移后依然成立，具有归纳性质。
+比如说，如果$Ind$在状态$s$下成立，那么在$s$的任意后继状态下，$Ind$依然成立；
+定理\ref{con:safety}表明归纳不变式蕴含安全属性，因此，如果某个运行时可达状态满足$Ind$, 那么也必然满足$Safety$。
+这是归纳不变式所必须满足的三个条件。
+
+\begin{align}
+    &\left.A_{1} \triangleq \forall s \in  { Server }: \forall c \in  { Client }:  { locked }[s] \Rightarrow(s \notin { held }[c])\right) \\
+    &{ Ind } \triangleq  { Safe } \wedge A_{1} \label{con:candidate_ind}
+\end{align}
+
+对于\textit{Client\_Server} 规约，表达式\ref{con:candidate_ind}是一个可能的归纳不变式。
+可以看到的是，$Ind$是由$Safe$和$A_{1}$两个谓词逻辑表达式合取组成而来。
+事实上，大部分规约的归纳不变式都可以表达为$Ind \triangleq Safety \wedge A_1 \wedge A_2 \wedge... \wedge A_n$的形式。
+其中合取子式$A_k$是约束状态的谓词，我们将之称为候选不变式(lemma invariant)。
+因为归纳不变式$Ind$是由这些候选不变式$A_k$组合而成的，也就是说，归纳不变式强于每一个候选不变式。
+因此，候选不变式需要满足不变性，且包含每一个规约所能到达的状态，才能成为一个合适的候选不变式。
+但是，候选不变式本身不需要满足归纳性，只需要他们和安全属性的合取能够满足归纳性。
 
 但是，尤其是对于越复杂的系统而言，寻找归纳不变式并不是一个简单的任务。
-实现归纳不变式的自动生成是形式化验证领域一个重要的研究目标。
+实现归纳不变式的自动生成是形式化验证领域一个重要的研究目标，这也是本文研究的内容。
+
+\section{TLC 和 Apalache}
+TLC和Apalache是两个常见的面向\TLA 规约的模型检查工具(model checker)。
+
+\subsection{TLC}
+TLC既是对\TLA 规约的模型检查工具，也是一个面向规约的模拟器。
+它是一个显式状态模型检查器，依照用户给出的规约和设置，搜索所有满足约束的状态和状态转移，
+并在这个过程中检查安全属性和其他用户定义的谓词逻辑时时是否成立。
+如果遇到错误，TLC会将错误的状态和状态转移过程输出，以便用户进行分析。
+
+TLC可以通过使用超过32个计算机线程以获得近乎线性的加速。
+它可以通过在分布式部署的计算机网络上运行来进一步加速模型检查，并提供在云系统上的轻松部署
+
+\subsection{Apalache}
+Apalache\cite{apalache1, apalache2} 和 TLC 不同的是，Apalache 并不是通过遍历所有可能的状态来检验安全属性是否成立，而是通过 SMT solver 来检验，
+而是将\TLA 规约转换为 SMT 问题，然后使用 SMT solver (如Z3\cite{z3})求解来检验安全属性是否成立。
+Apalaches 是一种符号检查器，它和 SMT solver 一样基于逻辑推理和公式求解实现的。
+Apalache 对\TLA 源文件的语法中引入了一些限制，
+尽管没有完全支持\TLA 的所有语法，但是这方便使用 SMT 求解器进行求解。
+
+\TLA 是一个“弱类型”的编程语言，它对变量没有严格的类型注明。
+但是，Apalache 需要了解\TLA 规约中变量的类型才能工作。
+尽管 Apalache 有一套自己的类型推断系统，但是，它并不能完全解决所有的类型推断问题。
+这使得用户，对于某些协议，需要以注释的形式来提供变量的类型，才能交给Apalache进行处理。
+
+% 补充关于 返回结果和CTI的内容?
 
 \section{强化学习}
 强化学习(Reinforcement learning, RL)\cite{rl}是机器学习的一个领域，强调如何基于外部环境做出决策，以获得最大化的预期累积奖励。
@@ -77,7 +117,7 @@ $Ind'$表达的是这个式子经过状态转移后的状态仍然成立。
 因为很多强化学习算法在这种假设下才能使用动态规划的方法。
 传统的动态规划方法和强化学习算法的主要区别是，后者不需要关于MDP的知识，而且针对无法找到确切方法的大规模MDP。
 
-\begin{figure}
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.6\textwidth]{figures/Reinforcement_learning_diagram.pdf}
     \caption{强化学习框架}
@@ -94,17 +134,4 @@ $Ind'$表达的是这个式子经过状态转移后的状态仍然成立。
 并将每一次智能体选择的种子所生成的不变式的检验结果反馈给智能体，包括反例的数量，内容和生成时间等。
 智能体根据这些反馈信息，调整自己的策略，以便更快地找到一个满足安全属性的归纳不变式。
 
-\section{Apalache}
-Apalache\cite{apalache1, apalache2} 是一个面向\TLA 规约的模型检查器(model checker)。
-与 TLC 不同的是，Apalache 并不是通过遍历所有可能的状态来检验安全属性是否成立，而是通过 SMT solver 来检验，
-而是将\TLA 规约转换为 SMT 问题，然后使用 SMT solver (如Z3\cite{z3})求解来检验安全属性是否成立。
-Apalaches 是一种符号检查器，它和 SMT solver 一样基于逻辑推理和公式求解实现的。
-故而，Apalache相较于TLC，更适合用于归纳不变式的搜索和验证工作。
-Apalache 对\TLA 源文件的语法中引入了一些限制，
-尽管没有完全支持\TLA 的所有语法，但是这方便了 SMT 求解器进行求解。
-
-\TLA 是一个“弱类型”的编程语言，它对变量没有严格的类型著名。
-但是，Apalache 需要了解\TLA 规约中变量的类型才能工作。
-尽管 Apalache 有一套自己的类型推断系统，但是，它并不能完全解决所有的类型推断问题。
-这使得用户，对于某些协议，需要以注释的形式来提供变量的类型。
 
