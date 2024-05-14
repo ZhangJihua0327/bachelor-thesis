@@ -54,8 +54,7 @@ TLC 和 Apalache 是两个常见的面向\TLA 规约的模型检查工具(model 
 \textbf{"-config"}是我多样化使用TLC和apalache的关键，通过这个选项，我们可以指定TLC和Apalache的配置文件，以检验不变式的不同性质。
 \textbf{"-deadlock"}选项用于检查是否存在死锁状态，如果选择了这个选项，那么TLC就不会检验死锁。
 由于我们的目的是检验不变式的一些性质，所以我们不需要检验死锁，并选择了这一选项。
-\textbf{"-depth"}选项揭示了TLC的状态空间搜索的深度，我们可以通过这个选项来控制TLC的搜索深度，在不同情况下，我们会选择不同的深度。
-例如在检验递归性时，只需要将深度设置为2，即经过一步转化后$IndCand$ 是否还满足。
+\textbf{"-continue"}选项揭示了TLC在检测出错误后是否继续运行，为了得到更多的反例，我们需要使用这个选项。
 
 \subsection{model checker 的调用和结果解析}
 本项目的代码主要基于Python实现，然而不论是TLC还是Apalache，都是Java实现的模型检查器，且没有可以直接调用的Python接口。
@@ -67,8 +66,13 @@ TLC和Apalache尽管两者有着不同的输出格式，但是他们的功能其
 错误轨迹的每一个节点都是一个状态，表达的是在这个状态下，各个变量的值。
 TLC会以析取范式的形式将各个变量的值表达出来，而Apalache默认使用的json文件格式，将各个变量的值以键值对的形式表达出来。
 我们需要将这些信息解析出来，以便强化学习模块能够理解这些信息，调整生成的候选不变式。
-
-
+类\textbf{CTI}的信息如图\ref{fig:class_cti}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.3\textwidth]{figures/class_cti.pdf}
+    \caption{CTI 类信息}
+    \label{fig:class_cti}
+\end{figure}
 \section{候选不变式生成模块}
 
 生成模块是本项目的关键，它负责生成候选不变式，检验模块是为生成模块服务的。
@@ -102,11 +106,31 @@ gymnasium是一个开源的强化学习环境，提供了标准的环境接口�
 与此同时，\textbf{step} 函数还需要返回观察值，这对应于observation\_space中的四条信息的数据结构。
 这里复用了反例字段，在得到合适不变式时，返回归纳反例，否则，返回的是智能体提供的不变式的反例。
 % 配个图
+\begin{table}[!h]
+    \label{table:award_punish}
+	\centering
+	\caption{奖励与惩罚的情况设置}
+	\label{tab::situation}
+	\renewcommand\arraystretch{1.4}
+	\begin{tabular}{p{0.25\textwidth}p{0.15\textwidth}p{0.5\textwidth}}
+		\toprule
+		\textbf{候选不变式结果}   & \textbf{奖惩值} \\ 
+        \midrule
+		简单重复已有不变式 & -10 \\
+		非不变式      & 0   \\
+		被已有不变式覆盖  & 2   \\
+		归纳不变式子式   & 10 \\
+        \bottomrule
+	\end{tabular}
+\end{table}
 
 \subsection{强化学习智能体实现}
 
-在智能体实现部分，我们使用了\href{https://tianshou.org/en/stable/}{tianshou} \cite{tianshou} 实现了强化学习的算法。
-tianshou是一个开源的，基于PyTorch的强化学习库，帮助我们快速实现一个强化学习智能体。
-tianshou提供了许多强化学习算法，包括DQN，PPO，A2C等。
+实现智能体并不困难，gymnasium 的环境接口可以对接诸多的强化学习智能体实现框架。
+本文选择了OpenAI \href{https://github.com/openai/baselines}{baselines}\cite{baselines}来实现智能体部分。
+baselines 包括多种强化学习算法。
+本文尝试了多种算法，包括DQN，PPO，A2C等算法。
 
-这部分的具体参数设置和实现细节，我们在实验部分会详细介绍。
+\section{非功能模块}
+
+非功能模块包括日志功能，计时功能，报错信息等，这些功能伴随着系统每个行为，为开发人员和用户提供更多信息，方便调试和使用。

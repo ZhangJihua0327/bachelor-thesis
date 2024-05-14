@@ -13,6 +13,24 @@
 \usepackage{algorithm,algorithmic} % 展示算法伪代码
 \usepackage{subcaption} % 嵌套小幅图像，比 subfig 和 subfigure 更新更好
 \usepackage{siunitx} % 标准单位符号
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{appendix}
+
+\lstset{
+	frame=single,
+        numbers=left,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	basicstyle=\footnotesize\ttfamily,
+	columns=flexible,
+	tabsize=2,
+	keepspaces=true,
+        breaklines=true,
+        breakatwhitespace=true
+}
 
 \newcommand{\TLA}{TLA\textsuperscript{+}\ }
 
@@ -83,5 +101,6 @@
 感谢党和国家对教育事业的支持。感谢南京大学，以及诸位老师，工作人员为我们提供了一个良好的学习环境。
 
 \end{acknowledgement}
+\include{appendix/endive_simpele_election}
 
 \end{document}

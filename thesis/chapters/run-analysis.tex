@@ -1,1 +1,46 @@
 \chapter{运行试验和结果分析}
+
+\section{部分运行结果展示}
+\textbf{simple\_election}
+\begin{lstlisting}
+    Ind == 
+    /\ TypeOK
+    /\ Safety
+    /\ \A VARS \in Acceptor : \A VART \in Acceptor : \A VARPA \in Proposer : \A VARPB \in Proposer : \E VARQ \in Quorum :   \/ (VARPA \in start)  \/ (VARPB \in start)  \/ (VARPA \in leader)  \/ (~(ChosenAt(VARQ,VARPB)))
+    /\ \A VARS \in Acceptor : \A VART \in Acceptor : \A VARPA \in Proposer : \A VARPB \in Proposer : \E VARQ \in Quorum :   \/ (VARPB \in start)  \/ (~(<<VARS,VARPB>> \in promise))  \/ (DidNotPromise(VART))  \/ (ChosenAt(VARQ,VARPA))
+    /\ \A VARS \in Acceptor : \A VART \in Acceptor : \A VARPA \in Proposer : \A VARPB \in Proposer : \E VARQ \in Quorum :   \/ (<<VARS,VARPA>> \in promise)  \/ (~(<<VARS,VARPB>> \in promise))  \/ (~(VARPA \in leader))  \/ (ChosenAt(VARQ,VARPA))
+    /\ \A VARS \in Acceptor : \A VART \in Acceptor : \A VARPA \in Proposer : \A VARPB \in Proposer : \E VARQ \in Quorum :   \/ (VARPA \in start)  \/ (~(VARPA \in leader))  \/ (~(VARPB \in leader))  \/ (~(ChosenAt(VARQ,VARPA)))
+    /\ \A VARS \in Acceptor : \A VART \in Acceptor : \A VARPA \in Proposer : \A VARPB \in Proposer : \E VARQ \in Quorum :   \/ (VARPA \in start)  \/ (<<VART,VARPB>> \in promise)  \/ (~(VARPA \in leader))  \/ (VARPB \in leader)
+    /\ \A VARS \in Acceptor : \A VART \in Acceptor : \A VARPA \in Proposer : \A VARPB \in Proposer : \E VARQ \in Quorum :   \/ (~(<<VART,VARPB>> \in promise))  \/ ((VARPA=VARPB) /\ promise = promise)  \/ (~(VARPA \in leader))  \/ (~(ChosenAt(VARQ,VARPA)))
+    /\ \A VARS \in Acceptor : \A VART \in Acceptor : \A VARPA \in Proposer : \A VARPB \in Proposer : \E VARQ \in Quorum :   \/ (~(<<VARS,VARPB>> \in promise))  \/ (<<VART,VARPB>> \in promise)  \/ (~(VARPA \in leader))  \/ (ChosenAt(VARQ,VARPA))
+    /\ \A VARS \in Acceptor : \A VART \in Acceptor : \A VARPA \in Proposer : \A VARPB \in Proposer : \E VARQ \in Quorum :   \/ (~(VARPB \in start))  \/ (~(VARS=VART /\ promise = promise))  \/ (~(VARPA \in leader))  \/ (ChosenAt(VARQ,VARPA))
+    /\ \A VARS \in Acceptor : \A VART \in Acceptor : \A VARPA \in Proposer : \A VARPB \in Proposer : \E VARQ \in Quorum :   \/ (VARPB \in start)  \/ (~(<<VART,VARPA>> \in promise))  \/ ((VARPA=VARPB) /\ promise = promise)  \/ (~(VARPB \in leader))
+    /\ \A VARS \in Acceptor : \A VART \in Acceptor : \A VARPA \in Proposer : \A VARPB \in Proposer : \E VARQ \in Quorum :   \/ (VARPA \in start)  \/ (~(<<VART,VARPA>> \in promise))  \/ (~(VARPB \in leader))  \/ (~(DidNotPromise(VARS)))
+    /\ \A VARS \in Acceptor : \A VART \in Acceptor : \A VARPA \in Proposer : \A VARPB \in Proposer : \E VARQ \in Quorum :   \/ (VARPB \in start)  \/ (~(<<VART,VARPB>> \in promise))  \/ (VARS=VART /\ promise = promise)  \/ (~(VARPA \in leader))
+    /\ \A VARS \in Acceptor : \A VART \in Acceptor : \A VARPA \in Proposer : \A VARPB \in Proposer : \E VARQ \in Quorum :   \/ (VARPB \in start)  \/ (VARPA \in leader)  \/ (~(VARPB \in leader))  \/ (~(DidNotPromise(VARS)))
+    /\ \A VARS \in Acceptor : \A VART \in Acceptor : \A VARPA \in Proposer : \A VARPB \in Proposer : \E VARQ \in Quorum :   \/ (~(<<VART,VARPA>> \in promise))  \/ (~(<<VART,VARPB>> \in promise))  \/ (VARS=VART /\ promise = promise)  \/ ((VARPA=VARPB) /\ promise = promise)
+\end{lstlisting}
+
+\textbf{lockserver}
+\begin{lstlisting}
+    Ind == 
+    /\ TypeOK
+    /\ Inv
+    /\ \A VARS \in Server : \A VARC \in Client :   \/ (~(semaphore[VARS]))  \/ (~(VARS \in clientlocks[VARC]))  \/ (clientlocks[VARC] = {})
+\end{lstlisting}
+
+\section{运行结果分析}
+endive 对于协议\textbf{simple\_election}的验证结果见于附录\ref{app:endive_simple_election}。
+
+对比endive的结果，我们的工具可能会生成更多的不变式。
+对于这一现象的现象的解释，我认为是强化学习智能体在一开始尝试时会更偏向于选择已有的不变式比较相似的不变式，
+但是在系统的提示下，相似的不变式往往不能得到很好的奖励值，于是系统便会在更加稀疏的区域寻找不变式。
+这样的结果导致了，我们的工具会生成更多的相近不变式，但是，这不妨碍我们的工具生成最终正确的归纳不变式。
+
+系统运行的总体时间相较于endive偏长。
+这是因为TLC和apalache没有直接的python接口，我们需要通过调用命令行的方式来调用TLC和apalache，并通过字符串解析命令行输出。
+一次校验的时间，平均在0.3秒左右。相较于endive 一次校验数十个不变式，我们的工具一次校验一个不变式，所以时间上会有所增加。
+但相较于随机遍历，以\textit{simple\_election}为例，拥有12个用户定义谓词，对于长度小于4的候选不变式，大概需要遍历接近万次。
+然而我们的工具，遍历的次数在千次左右，在效率上有显著的提升。
+
+
