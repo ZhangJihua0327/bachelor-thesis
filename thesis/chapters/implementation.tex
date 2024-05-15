@@ -1,4 +1,4 @@
-\chapter{归纳不变式自动生成工具的实现}
+\chapter{归纳不变式自动生成工具的实现}\label{chap:implementation}
 
 本章节基于设计方案，详细介绍了归纳不变式自动生成工具的实现细节，包括块之间的交互，以及模块的具体实现。
 
@@ -66,7 +66,7 @@ TLC和Apalache尽管两者有着不同的输出格式，但是他们的功能其
 错误轨迹的每一个节点都是一个状态，表达的是在这个状态下，各个变量的值。
 TLC会以析取范式的形式将各个变量的值表达出来，而Apalache默认使用的json文件格式，将各个变量的值以键值对的形式表达出来。
 我们需要将这些信息解析出来，以便强化学习模块能够理解这些信息，调整生成的候选不变式。
-类\textbf{CTI}的信息如图\ref{fig:class_cti}
+类\textbf{CTI}的信息如图\ref{fig:class_cti}，通过类CTI中的静态方法\textbf{parse\_cti}，将错误轨迹提取出来。
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.3\textwidth]{figures/class_cti.pdf}
