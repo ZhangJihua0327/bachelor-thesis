@@ -27,31 +27,36 @@ rlTLA的工作流如图\ref{fig:rltla}所示，功能模块主要分为候选不
 \begin{algorithm}[ht]
     \caption[short]{workflow of rlTLA}
     \label{alg:rltla-workflow}
-    
-    \begin{algorithmic}[1]
-        \REQUIRE \ \\
-        $M$: Finite instance of parameterized system\\
-        $Safe$: Safety property
-		\ENSURE \ \\
-        $Ind$: Inductive Invariant Candidiate
-		\STATE $Ind \gets Safe$
-        \STATE $IndCTIs \gets GenrateIndCTIs(M, Ind)$
-        \WHILE{$IndCTIs$ is not empty}
-            \WHILE{True}
-                \STATE $Inv \gets GenerateCandidateInvariant(M, IndCTIs)$
-                \STATE $InvCEs \gets GenrateInvCTIs(M, Inv)$
-                \IF{$InvCEs$ is not empty}
-                    \STATE $Continue$
-                \ENDIF
-                \IF {not $CheckDeduction(Ind, Inv)$} 
-                    \STATE $Ind = Ind \wedge Inv$
-                    \STATE $Break$
-                \ENDIF
-            \ENDWHILE
-            \STATE $IndCTIs \gets GenrateIndCTIs(M, Ind)$
-        \ENDWHILE
-        \RETURN $Ind$
-    \end{algorithmic}
+    \SetKwInput{Input}{Input}
+    \SetKwInput{Output}{Output}
+    \SetKwFunction{GenIndCTIs}{GenIndCTIs}
+    \SetKwFunction{GenInvCEs}{GenInvCEs}
+    \SetKwFunction{GenNextInv}{GenNextInv}
+    \SetKwFunction{Eliminate}{EliminateCTI}
+    \SetKwData{Ind}{$Ind$}
+    \SetKwData{Inv}{$Inv$}
+    \SetKwData{Module}{$M$}
+    \SetKwData{Safe}{$Safe$}
+    \SetKwData{CTIs}{$CTIs$}
+    \SetKwData{CEs}{$CEs$}
+    \Input{\Module: Finite instance of parameterized system}
+    \Input{\Safe: Safety property}
+    \Output{\Ind: Inductive Invariant Candidiate}
+    \BlankLine
+    \Ind \leftarrow \Safe \;
+    \CTIs \leftarrow \GenIndCTIs{\Module, \Ind} \;
+    \CEs \leftarrow $\emptyset$ \;
+    \While{\CTIs \neq $\emptyset$}{
+        \Inv \leftarrow \GenNextInv{\Module, \Ind, \CTIs, \CEs} \;
+        \CEs \leftarrow \GenInvCEs{\Module, \Ind} \;
+        \If{\CEs \equal $\emptyset$}{ }{
+            \If {\Eliminate{\Module, \Inv, \CTIs}}{
+                \Ind \leftarrow \Ind $\wedge$ \Inv \;
+                \CTIs $\leftarrow$ \GenIndCTIs{\Module, \Ind} \;
+            }
+        }
+    }
+    \Return{\Ind}
 \end{algorithm}
 
 \begin{align}
