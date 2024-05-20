@@ -2,6 +2,7 @@
 
 \section{部分运行结果对比}
 \textbf{Lock Server}
+
 \rltla 对规约 Lock Server 得到的归纳不变式如下：
 \begin{lstlisting}
 LockServerInd == 
@@ -89,7 +90,8 @@ TwoPhaseInd ==
 
 \section{对比随机结果的消融实验}
 为了证明强化学习模块在归纳不变式生成过程中起到了作用，我们在Two Phase协议上进行了强化学习模块的消融实验，我们使用完全随机的seed选择过程代替强化学习。
-图\ref{fig:all}是我们的实验结果，其中，图\ref{fig:inv}代表截至目前为止，每轮生成的候选引理不变式通过不变式检查的频率，图\ref{fig:ind}代表最终加入到归纳不变式候选集合中的概率。
+图\ref{fig:all}展示我们的实验结果，其中，图\ref{fig:inv}表示截至目前为止，每轮生成的候选引理不变式通过不变式检查的频率，图\ref{fig:ind}表示最终加入到归纳不变式候选集合中的概率。
+以上图表表明，强化学习模块在归纳不变式生成过程中起到了积极的作用，提高了候选引理不变式的质量。
 \begin{figure}[htb]
     \centering
     \subfloat[invaraint hit rate]{
