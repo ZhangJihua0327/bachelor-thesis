@@ -1,0 +1,55 @@
+\appendix
+\chapter{endive 对 TwoPhase 的验证结果}\label{app:endive_TwoPhase}
+\begin{lstlisting}
+  Inv276_1_0_def == (tmPrepared = RM) \/ (~([type |-> "Commit"] \in msgs))
+  Inv45_1_1_def == \A rmi \in RM : ([type |-> "Commit"] \in msgs) \/ (~(rmState[rmi] = "committed"))
+  Inv79_1_2_def == \A rmi \in RM : ([type |-> "Prepared", rm |-> rmi] \in msgs) \/ (~(tmPrepared = tmPrepared \cup {rmi}))
+  Inv349_1_3_def == \A rmi \in RM : ~([type |-> "Prepared", rm |-> rmi] \in msgs) \/ (~(rmState[rmi] = "working"))
+  Inv318_1_4_def == ~([type |-> "Abort"] \in msgs) \/ (~([type |-> "Commit"] \in msgs))
+  Inv331_1_5_def == ~([type |-> "Abort"] \in msgs) \/ (~(tmState = "init"))
+  Inv334_1_6_def == \A rmi \in RM : ~([type |-> "Commit"] \in msgs) \/ (~(rmState[rmi] = "aborted"))
+  Inv344_1_7_def == ~([type |-> "Commit"] \in msgs) \/ (~(tmState = "init"))
+  Inv1863_2_8_def == \A rmi \in RM : (rmState[rmi] = "prepared") \/ (~([type |-> "Prepared", rm |-> rmi] \in msgs) \/ (~(tmState = "init")))
+  
+  \* The inductive invariant candidate.
+  IndAuto ==
+    /\ TypeOK
+    /\ TCConsistent
+    /\ Inv276_1_0_def
+    /\ Inv45_1_1_def
+    /\ Inv79_1_2_def
+    /\ Inv349_1_3_def
+    /\ Inv318_1_4_def
+    /\ Inv331_1_5_def
+    /\ Inv334_1_6_def
+    /\ Inv344_1_7_def
+    /\ Inv1863_2_8_def
+\end{lstlisting}
+
+\chapter{Client\_Server 规约的配置文件}\label{app:client_server_config}
+\begin{lstlisting}
+{
+    "preds"  :  [
+        "<<VARR,VARP>> \\in match",
+        "<<VARI,VARR>> \\in request_sent",
+        "<<VARJ,VARR>> \\in request_sent",
+        "<<VARI,VARP>> \\in response_sent",
+        "<<VARJ,VARP>> \\in response_sent",
+        "<<VARI,VARP>> \\in response_received",
+        "<<VARJ,VARP>> \\in response_received",
+        "VARI=VARJ /\\ match = match",
+        "ResponseMatched(VARI,VARP)"
+    ],
+    "preds_alt" : [],
+    "safety"  :  "Safety",
+    "constants"  :  "CONSTANT\nNode = {n1,n2,n3}\nRequest = {r1,r2}\nResponse={p1,p2}\nn1 = n1\nn2 = n2\nn3 = n3\nr1 = r1\nr2 = r2\np1 = p1\np2 = p2\n",
+    "constraint"  :  "",
+    "quant_inv"  :  "\\A VARI \\in Node : \\A VARJ \\in Node : \\A VARR \\in Request : \\A VARP \\in Response : ",
+    "quant_inv_alt"  :  null,
+    "quant_vars": [],
+    "model_consts"  :  "CONSTANT n1,n2,n3,r1,r2,p1,p2",
+    "symmetry" : true,
+    "typeok"  :  "TypeOK",
+    "simulate"  :  true      
+}
+\end{lstlisting}

@@ -10,11 +10,31 @@
 \input{zhangjihua-thesis-setup.def}
 
 \usepackage{listings} % 展示代码
-\usepackage{algorithm,algorithmic} % 展示算法伪代码
+\usepackage[commentsnumbered,ruled,linesnumbered,vlined]{algorithm2e}
 \usepackage{subcaption} % 嵌套小幅图像，比 subfig 和 subfigure 更新更好
 \usepackage{siunitx} % 标准单位符号
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{appendix}
+\usepackage{amsmath}
+
+\lstset{
+	frame=single,
+        numbers=left,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	basicstyle=\footnotesize\ttfamily,
+	columns=flexible,
+	tabsize=2,
+	keepspaces=true,
+        breaklines=true,
+        breakatwhitespace=true
+}
 
 \newcommand{\TLA}{TLA\textsuperscript{+}\ }
+\newcommand{\rltla}{RlTLA\ }
 
 \begin{document}
 % 封面
@@ -28,11 +48,12 @@
     这个不变式被称为归纳不变式。
     自动化地生成分布式协议的归纳不变式是验证自动化分布式协议正确性的关键步骤。
 
-    以往的研究主要基于的IVy进行实现，\TLA 语言领域的相关研究较少。本文将提供一种基于\TLA 的归纳不变式生成工具，实现对以\TLA 语言描述的分布式协议规约的归纳不变式的自动化生成。
-    与此同时，通过引入了强化学习的方法，加速归纳不变式的推导。
-    引入外部工具 \href{https://apalache.informal.systems/}{apalache} 作为验证引擎，实现了对归纳不变式的验证。
-    在进入强化学习模块之前，我们基于 tla2tools 对 \TLA 源文件进行静态分析，提取出语义信息，以便强化学习框架理解 \TLA 文件的语义。
-    通过实验，本文提出的方法的有效性和可行性可以得到验证。
+    以往的研究主要基于的IVy进行实现，\TLA 语言领域的相关研究较少。
+    本文将提供一种基于\TLA 的归纳不变式生成工具\rltla ，实现对以\TLA 语言描述的分布式协议规约的归纳不变式的自动化生成。
+    利用强化学习的方法，加速归纳不变式的推到过程。
+    通过引入TLC或Apalache 做为模型检查器，实现对归纳不变式的验证。
+    通过实验，验证了\rltla 的有效性，证明了强化学习在归纳不变式生成中应用的可行性。
+
 \end{abstract}
   
 \begin{abstract*}
@@ -43,11 +64,10 @@
     Automatically generating inductive invariants for distributed protocols is a key step in verifying the correctness of automated distributed protocols.
 
     Previous research is mainly based on IVy for implementation, few on \TLA. 
-    This thesis will provide an inductive invariant generation tool based on \TLA, which realizes the automatic generation of inductive invariants for distributed protocol specifications described in \TLA language.
-    Meanwhile, it accrelerates the derivation of inductive invariants by introducing reinforcement learning methods.
-    The external tool \href{https://apalache.informal.systems/}{apalache} is introduced as a verification engine to verify the inductive invariants.
-    Before entering the reinforcement learning module, we perform static analysis on the \TLA source files using tla2tools to extract semantic information for the reinforcement learning framework to understand the semantics of the \TLA files.
-    Through experiments, the effectiveness and feasibility of the method proposed in this thesis have been verified.
+    This thesis will provide an inductive invariant generation tool based on \TLA, called \rltla , which realizes the automatic generation of inductive invariants for distributed protocol specifications described in \TLA language.
+    It accelerates the process of inductive invariant derivation using reinforcement learning methods,
+    and verification of inductive invariants is implemented well by introducing TLC or Apalache, model checkers.
+    Through experiments, the effectiveness of \rltla , and the feasibility of applying reinforcement learning in inductive invariant generation have been proved.
 \end{abstract*}
 
 % 目录
@@ -77,11 +97,13 @@
 感谢父母，祖父母对我的养育之恩，对我生活和求学的支持。是他们的付出，让我有成长学习的环境。
 
 感谢魏恒峰老师在学习生活上的指导。是他带领我进入科研的大门，让我了解分布式系统验证和形式化方法。
+同时感谢邓楚宸同学在本项目实现上做出的大量工作和牺牲。
 
 感谢诸位朋友的陪伴，开导，帮助和建议，人生因为你们而丰富多彩。
 
 感谢党和国家对教育事业的支持。感谢南京大学，以及诸位老师，工作人员为我们提供了一个良好的学习环境。
 
 \end{acknowledgement}
+\include{appendix/appendix}
 
 \end{document}
