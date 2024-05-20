@@ -1,6 +1,6 @@
 \chapter{归纳不变式自动生成工具的实现}\label{chap:implementation}
 
-本章节将基于设计方案，详细介绍了归纳不变式自动生成工具的实现细节，包括模块之间的交互，以及模块的具体实现。
+本章节将基于设计方案，详细介绍了归纳不变式自动生成工具的实现细节，包括模块之间的交互以及模块的具体实现。
 
 \section{候选不变式检验模块}
 
@@ -158,6 +158,8 @@ preds 字段下是生成候选不变式的种子(seed)。quants 字段下存储�
 \subsection{强化学习智能体}
 智能体接受这些数据前，需要先对数据进行预处理，将数据从高维或稀疏数据转换为低维、密集向量。这个动作叫做数据嵌入，是强化学习中的一个重要步骤，
 可以简化数据结构，使其在机器学习模型中更易于处理和分析。嵌入的目的在于捕捉数据的语义或结构信息，同时减少数据的维度和复杂度。
+本文在此选择的是LSTM(Long Short-Term Memory)的嵌入方法，LSTM是一种特殊的递归神经网络，专门设计用来解决普通RNN在处理长序列数据时存在的梯度消失和梯度爆炸问题，
+因此适合作为数据嵌入的方法。
 
 智能体的策略表示智能体在不同的状态下，选择不同行动的概率，策略选择的结果直接指导了智能体的行为。
 值函数预测采取某一个行动后，在此状态下得到的奖励值，值函数的目的是评估智能体在某一个状态下采取某一个行动的好坏。
@@ -170,14 +172,6 @@ preds 字段下是生成候选不变式的种子(seed)。quants 字段下存储�
 
 action\_vector对应于对种子的选择，交给Seed2Lemma模块，组合上量词，生成候选不变式。每个种子都会取其本身和取其反面，并组成多个候选不变式，主要为了降低智能体处理问题的难度。
 
-智能体在采取每个行动后，除了得到环境的状态信息，包括反例或者归纳反例和候选归纳不变式的状态，还会得到奖惩值和调整系数，这两个参数用于调整智能体的策略。
-智能体会计算每轮采取的行动的损失值，并通过\textit{backward}方法向后传播给模型，更新模型的参数。
-损失值有三个度量维度，分别为严格性损失(Strict Loss, \ref{con:strictloss})，预测损失(Prediction Loss, \ref{con:rewardloss})
-和均方损失(MSE Loss, \ref{con:mse})，其总和为总损失\ref{con:totalloss}。
-表达式中，$\text{N}$表示每次选择的种子数量 $\text{sd}_i$表示每个种子被选择的概率分布。
-环境的反馈中给出了调整系数$\gamma$，调整系数是用于调整严格性损失在总体损失中的占比，$\text{f}$ 则是环境给出的具体奖惩值。
-$\text{p}$和$\text{q}$ 分别为$\text{action\_distribution}$的输出概率分布和目标概率分布。
-三个维度的损失组成总体损失，总体损失反应了智能体做出的决策优劣，指导做出下一轮决策。
 \begin{align}
 	&\text{StrictLoss} = - \frac{1}{N} \sum_{i=1}^{N} log\_softmax(\text{action\_distribution}) \cdot \text{sd}_i \cdot \gamma \label{con:strictloss} \\
 	&\text{r} = \left[ \text{f} \cdot \text{discounter}^{n-1}, \ldots , \text{f} \cdot \text{discounter}^1, \text{f} \cdot \text{discounter}^{0} \right] \label{con:r}\\
@@ -187,7 +181,14 @@ $\text{p}$和$\text{q}$ 分别为$\text{action\_distribution}$的输出概率分
 	&\text{Total Loss} = \text{Strict Loss}+\text{RewardLoss}+\text{MSELoss} \label{con:totalloss}
 \end{align}
 
-
+智能体在采取每个行动后，除了得到环境的状态信息，包括反例或者归纳反例和候选归纳不变式的状态，还会得到奖惩值和调整系数，这两个参数用于调整智能体的策略。
+智能体会计算每轮采取的行动的损失值，并通过\textit{backward}方法向后传播给模型，更新模型的参数。
+损失值有三个度量维度，分别为严格性损失(Strict Loss, \ref{con:strictloss})，预测损失(Prediction Loss, \ref{con:rewardloss})
+和均方损失(MSE Loss, \ref{con:mse})，其总和为总损失\ref{con:totalloss}。
+表达式中，$\text{N}$表示每次选择的种子数量 $\text{sd}_i$表示每个种子被选择的概率分布。
+环境的反馈中给出了调整系数$\gamma$，调整系数是用于调整严格性损失在总体损失中的占比，$\text{f}$ 则是环境给出的具体奖惩值。
+$\text{p}$和$\text{q}$ 分别为$\text{action\_distribution}$的输出概率分布和目标概率分布。
+三个维度的损失组成总体损失，总体损失反应了智能体做出的决策优劣，指导做出下一轮决策。
 
 \section{非功能模块}
 

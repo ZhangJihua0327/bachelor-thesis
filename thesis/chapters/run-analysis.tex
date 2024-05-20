@@ -9,6 +9,8 @@ LockServerInd ==
     /\ Inv
     /\ \A VARS \in Server : \A VARC \in Client : ~(VARS \in clientlocks[VARC]) \/ (~(semaphore[VARS])) 
 \end{lstlisting}
+所需时间: 20.43s
+
 人工得到的归纳不变式如下：
 \begin{lstlisting}
     Ind == 
@@ -16,7 +18,7 @@ LockServerInd ==
         /\ Inv
         /\ \A c \in Client, s \in Server : (s \in clientlocks[c]) => ~semaphore[s]
 \end{lstlisting}
-所需时间: 20.43s
+
 
 \textbf{TwoPhase}
 \begin{lstlisting}
@@ -44,10 +46,11 @@ TwoPhaseInd ==
     /\ \A rmi \in RM : \A rmj \in RM : ~([type |-> "Abort"] \in msgs) \/ (~(rmState[rmj] = "aborted")) \/ (~(tmState = "init"))
     /\ \A rmi \in RM : \A rmj \in RM : ~([type |-> "Abort"] \in msgs) \/ (~(tmState = "init"))
 \end{lstlisting}
-所需时间: 680.43s 
+所需时间: 680.43s。
+
 附录\ref{app:endive_TwoPhase}展示了endive 对此的归纳不变式结果。
 
-\section{其他协议上的运行结果及与endive 对比}
+\section{其他协议上的运行结果及与endive 对比分析}
 除了以上两个典型规约，我们还在endive 提供的其他规约上运行了实验，结果如表\ref{tab:result}所示。
 我们主要关注运行时间和\rltla 与endive对同一规约生成的归纳不变式的长度。
 \begin{table}[!htbp]
@@ -86,7 +89,7 @@ TwoPhaseInd ==
 
 \section{对比随机结果的消融实验}
 为了证明强化学习模块在归纳不变式生成过程中起到了作用，我们在Two Phase协议上进行了强化学习模块的消融实验，我们使用完全随机的seed选择过程代替强化学习。
-图\ref{fig::all}是我们的实验结果，其中，图\ref{fig:inv}代表截至目前为止，每轮生成的候选引理不变式通过不变式检查的频率，图\ref{fig:ind}代表最终加入到归纳不变式候选集合中的概率。
+图\ref{fig:all}是我们的实验结果，其中，图\ref{fig:inv}代表截至目前为止，每轮生成的候选引理不变式通过不变式检查的频率，图\ref{fig:ind}代表最终加入到归纳不变式候选集合中的概率。
 \begin{figure}[htb]
     \centering
     \subfloat[invaraint hit rate]{
