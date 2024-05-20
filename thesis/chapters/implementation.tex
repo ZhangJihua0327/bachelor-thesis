@@ -19,10 +19,10 @@ TLC 和 Apalache 是两个常见的面向\TLA 规约的模型检查工具(model 
 \subsection{model checker的配置文件和运行选项}
 
 对于图\ref{fig:client_server}中的规约，TLC 和 Apalache 会使用默认的配置文件进行验证，
-即以 $INIT$为初始状态，$NEXT$ 为状态转移关系，在状态变化的过程中验证 $Safe$ 安全属性的正确性。
+即以 $\text{INIT}$为初始状态，$\text{NEXT}$ 为状态转移关系，在状态变化的过程中验证 $\text{Safe}$ 安全属性的正确性。
 用户也可以指定使用其他配置文件，以验证从不同状态出发和不同状态转移条件下的用户定义的不变式的成立与否。
-比如说需要验证的不变式，可以放在$INVARIANT$ 字段下。
-对于一些常量，用户也可以通过配置文件$CONSTANTS$字段进行定义。
+比如说需要验证的不变式，可以放在$\text{INVARIANT}$ 字段下。
+对于一些常量，用户也可以通过配置文件$\text{CONSTANTS}$字段进行定义。
 一个典型的配置文件如下：
 \begin{lstlisting}
 INIT Init
@@ -33,24 +33,24 @@ INVARIANTS Inv_0 Inv_1 Inv_2
 CONSTANTS
 ...
 \end{lstlisting}
-我们可以简单的理解为，模型检测器可以判断$INIT \wedge NEXT \vDash INVARIANT$ 是否成立。
+我们可以简单的理解为，模型检测器可以判断$\text{INIT} \wedge \text{NEXT} \vDash \text{INVARIANT}$ 是否成立。
 在不成立时，模型检测器会给出一个状态的链接，展示系统状态如何从初始状态转移到不满足不变式的状态。
 
 我们希望TLC和Apalache为我们验证生成模块生成的候选不变式的正确性，独立性和与已有不变式合取结果的递归性。
 在验证过程中，我们希望模型检查器能够输出验证结果，以及验证过程中的反例(Counterexample)。
 
 验证不变式的正确性是验证这三种性质中最为简单的。
-只需要将需要验证的候选不变式放入$INVARIANT$字段中，然后运行模型检查器即可。
+只需要将需要验证的候选不变式放入$\text{INVARIANT}$字段中，然后运行模型检查器即可。
 如果没有报错，说明候选不变式在规约的有限实例上保持布尔值为真。
 
-由于候选的归纳不变式是由一系列引理不变式和安全属性合取而来，且每一个合取子式都满足$Init \wedge Next \vDash Lemma$，
+由于候选的归纳不变式是由一系列引理不变式和安全属性合取而来，且每一个合取子式都满足$\text{Init} \wedge \text{Next} \vDash \text{Lemma}$，
 所以候选归纳不变式自然满足引理\ref{con:init}和\ref{con:safety}。
 验证候选的归纳不变式的递归性质时，我们只需要验证引理\ref{con:inductive}的正确性，我们需要验证归纳不变式在状态转移后依然成立。
 在此过程中，模型检查器弹出的报错就是归纳反例。
 
 验证不变式的独立性是验证这三种性质中最为困难的。
 检查不变式的独立性就是检查新生成的引理不变式是否能杀死(eliminate)候选的归纳不变式的归纳反例。
-借助TLC，我们将系统的初始状态设置为这些归纳反例的状态之一，也就是将$INIT$ 设置为这些归纳反例状态的析取。
+借助TLC，我们将系统的初始状态设置为这些归纳反例的状态之一，也就是将$\text{INIT}$ 设置为这些归纳反例状态的析取。
 然后看在这些状态下，哪些新生成的引理不变式不成立。不成立便能代表他们能够杀死对应的归纳反例。
 在操作中，我们需要用变量记录下这些引理不变式的值。
 使用TLC的\textbf{"-dump"}选项将每个状态下的变量值输出到文件中，然后解析这些文件，找到能够杀死归纳反例的引理不变式。
@@ -58,7 +58,7 @@ CONSTANTS
 尽管可以通过\textbf{"-workers"}选项添加TLC调用的线程数量，但是也收效甚微。
 因此将归纳反例分组，分别使用一个线程对每一组归纳反例进行验证，可以有效减少验证时间。
 
-但是这种做法并不充分，还需要通过$IndCand \wedge Next \nvDash Lemma$的结果来确认新引理不变式的独立性。
+但是这种做法并不充分，还需要通过$\text{IndCand} \wedge \text{Next} \nvDash \text{Lemma}$的结果来确认新引理不变式的独立性。
 
 我们需要将新生成的不变式放到一个新的文件中，并使用关键字\textbf{EXTENDS} 将原有规约中的定义引入。
 这样，我们就可以在新的文件中使用原有规约中的定义，和引入生成模块生成的候选不变式。
@@ -174,9 +174,10 @@ action\_vector对应于对种子的选择，交给Seed2Lemma模块，组合上�
 智能体会计算每轮采取的行动的损失值，并通过\textit{backward}方法向后传播给模型，更新模型的参数。
 损失值有三个度量维度，分别为严格性损失(Strict Loss, \ref{con:strictloss})，预测损失(Prediction Loss, \ref{con:rewardloss})
 和均方损失(MSE Loss, \ref{con:mse})，其总和为总损失\ref{con:totalloss}。
-表达式中的$N$表示每次选择的种子数量。
-环境的反馈中给出了调整系数，调整系数是用于调整严格性损失在总体损失中的占比，即为表达式\ref{con:strictloss}中的$\gamma$。严格损失反应智能体的选择是否明确。
-总体损失反应了智能体做出的决策优劣，指导做出下一轮决策。
+表达式中，$\text{N}$表示每次选择的种子数量 $\text{sd}_i$表示每个种子被选择的概率分布。
+环境的反馈中给出了调整系数$\gamma$，调整系数是用于调整严格性损失在总体损失中的占比，$\text{f}$ 则是环境给出的具体奖惩值。
+$\text{p}$和$\text{q}$ 分别为$\text{action\_distribution}$的输出概率分布和目标概率分布。
+三个维度的损失组成总体损失，总体损失反应了智能体做出的决策优劣，指导做出下一轮决策。
 \begin{align}
 	&\text{StrictLoss} = - \frac{1}{N} \sum_{i=1}^{N} log\_softmax(\text{action\_distribution}) \cdot \text{sd}_i \cdot \gamma \label{con:strictloss} \\
 	&\text{r} = \left[ \text{f} \cdot \text{discounter}^{n-1}, \ldots , \text{f} \cdot \text{discounter}^1, \text{f} \cdot \text{discounter}^{0} \right] \label{con:r}\\
