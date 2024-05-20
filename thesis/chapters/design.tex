@@ -1,6 +1,6 @@
 \chapter{归纳不变式自动生成工具的设计}\label{chap:design}
 
-本章节将介绍rlTLA的具体设计，每个模块的职责和功能。
+本章节将介绍\rltla 的具体设计，每个模块的职责和功能。
 
 总体上，工具需要完成一下工作:
 \begin{itemize}
@@ -10,7 +10,7 @@
     \item 其他非功能模块，包括日志模块，计时模块等；
 \end{itemize}
 
-rlTLA的工作流如图\ref{fig:rltla}所示，功能模块主要分为候选不变式生成模块(Invariant Generator)，候选不变式检验模块(TLC/Apalache)两个部分。
+\rltla 的工作流如图\ref{fig:rltla}所示，功能模块主要分为候选不变式生成模块(Invariant Generator)，候选不变式检验模块(TLC/Apalache)两个部分。
 其中候选不变式生成模块接入了强化学习，训练强化模型智能体，以提高候选不变式的生成效率和准确率。
 候选不变式检验模块则接入了TLC或Apalache，对生成的候选不变式进行验证，检验其正确性，独立性和候选归纳不变式的递归性，并将结果返回给生成模块。
 在检验不变式的正确性和归纳不变式的递归性出现错误时，应当返回对应的不变式反例和归纳反例。
@@ -20,12 +20,12 @@ rlTLA的工作流如图\ref{fig:rltla}所示，功能模块主要分为候选不
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.7\textwidth]{figures/workflow.pdf}
-    \caption{rlTLA-workflow}
+    \caption{\rltla -workflow}
     \label{fig:rltla}
 \end{figure}
 
 \begin{algorithm}[ht]
-    \caption[short]{workflow of rlTLA}
+    \caption[short]{workflow of \rltla}
     \label{alg:rltla-workflow}
     \SetKwInput{Input}{Input}
     \SetKwInput{Output}{Output}
