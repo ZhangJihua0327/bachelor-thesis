@@ -105,7 +105,24 @@ CE类有着和CTI类相似的结构，不同的是，CE类更关注那个个使�
 强化学习是一种通过智能体和环境的交互，智能体通过观察环境的状态，采取行动，获得奖励，来学习如何在环境中获取最大的奖励。
 强化学习的智能体通过观察检验模块对已经生成的候选不变式和候选归纳不变式的验证结果，调整生成候选不变式的策略，提高生成候选不变式的效率和准确率。
 
-\subsection{数据输入部分}
+强化学习框架是本项目的核心，它负责生成候选不变式，检验模块是为生成模块服务的。
+rlTLA 核心逻辑是通过提供必要的信息和反馈，让强化学习智能体选择合适的种子，将他们组合起来，生成引理不变式的候选。
+一个强化学习框架可以分为环境和智能体两个部分，分别是环境和智能体。
+图\ref{fig:agent_env}简单地介绍了本文中的强化学习框架，描述了智能体和环境交互，不断生成候选引理不变式的大致过程。
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.75\textwidth]{figures/agent_env.pdf}
+	\caption{强化学习框架}
+	\label{fig:agent_env}
+\end{figure}
+
+\subsection{强化学习环境}
+
+环境模型是环境在强化学习中的数学表示，包含了环境中的重要信息，和对智能体的动作做出反馈。
+本文中，环境给智能体提供的内容包括输入部分，也就是\TLA 规约本身和用于提供给智能体选择的种子、以及在每轮循环中的反馈，即反例和归纳反例。
+这些信息足够作为智能体生成候选不变式的提示。
+
+对于反例和归纳反例的介绍，我们在候选不变式检验模块中已经有所介绍，这里不再赘述。
 
 输入部分，主要目的是存储和必要的数据和约束强化学习智能体的行为，使得其所能采取的行为能生成的候选不变式都必须符合基本的语法。
 
@@ -117,31 +134,58 @@ CE类有着和CTI类相似的结构，不同的是，CE类更关注那个个使�
 preds 字段下是生成候选不变式的种子(seed)。quants 字段下存储的是默认的量词。
 生成的候选不变式就是按照语法规则，组合种子和量词，生成符合语法的候选不变式。
 
-\subsection{强化学习框架的应用}
-
-强化学习框架是本项目的核心，它负责生成候选不变式，检验模块是为生成模块服务的。
-rlTLA 核心逻辑是通过提供必要的信息和反馈，让强化学习智能体选择合适的种子，将他们组合起来，生成引理不变式的候选。
-
-
-
-% 配个图
-\begin{table}[!h]
-    \label{table:award_punish}
+环境部分还包括对智能体动作的奖惩机制，奖惩机制是智能体在环境中学习的重要手段。
+基于智能体给出的不同的不变式，环境需要给出不同的奖惩。
+表\ref{tab:award_punish}给出了具体的数值设置。
+\begin{table}[!htbp]
 	\centering
 	\caption{奖励与惩罚的情况设置}
-	\label{tab::situation}
 	\renewcommand\arraystretch{1.4}
-	\begin{tabular}{p{0.25\textwidth}p{0.15\textwidth}p{0.5\textwidth}}
+	\begin{tabular}{p{0.15\textwidth}p{0.15\textwidth}p{0.3\textwidth}p{0.3\textwidth}}
 		\toprule
-		\textbf{候选不变式结果}   & \textbf{奖惩值} \\ 
-        \midrule
-		简单重复已有不变式 & -10 \\
-		非不变式      & 0   \\
-		被已有不变式覆盖  & 2   \\
-		归纳不变式子式   & 10 \\
-        \bottomrule
+		\textbf{类型}&\textbf{程度}&\textbf{情况}&\textbf{取值}\\
+		\midrule
+			惩罚&very&没有通过不变式检测&违反的状态数量(被归一化到区间[-100,-6]) \\ 
+			惩罚&medium&不变式检测超时&-5\\
+            惩罚&little&没有通过蕴含检测&-1\\
+            奖励&little&通过蕴含检测但没能通过归纳不变式检测&消除的CTI数量(被归一化到区间[1,100])\\
+            奖励&very&通过归纳不变式的检测&101\\
+		\bottomrule
 	\end{tabular}
+        \label{tab:award_punish}
 \end{table}
+
+\subsection{强化学习智能体}
+智能体接受这些数据前，需要先对数据进行预处理，将数据从高维或稀疏数据转换为低维、密集向量。这个动作叫做数据嵌入，是强化学习中的一个重要步骤，
+可以简化数据结构，使其在机器学习模型中更易于处理和分析。嵌入的目的在于捕捉数据的语义或结构信息，同时减少数据的维度和复杂度。
+
+智能体的策略表示智能体在不同的状态下，选择不同行动的概率，策略选择的结果直接指导了智能体的行为。
+值函数预测采取某一个行动后，在此状态下得到的奖励值，值函数的目的是评估智能体在某一个状态下采取某一个行动的好坏。
+这两者分别在\textit{PolicyNetwork}和\textit{RewardPredictor}中具体实现。
+
+\textit{PolicyNetwork} 接受了程序的总体特征和seeds的嵌入，得到 action\_vector，再将其放到\textit{Distributionlize} 中进行归一化处理，
+得到概率分布action\_distribution，用来指导seed的选择。
+\textit{RewardPredictor}将输入的状态向量和整体特征向量进行拼接，经过线性层逐层地提取特征，并把预测的奖励值投影到奖励值范围中，输出reward值。
+本文的奖励值范围是[-10, 10]。
+
+action\_vector对应于对种子的选择，交给Seed2Lemma模块，组合上量词，生成候选不变式。每个种子都会取其本身和取其反面，并组成多个候选不变式，主要为了降低智能体处理问题的难度。
+
+智能体在采取每个行动后，除了得到环境的状态信息，包括反例或者归纳反例和候选归纳不变式的状态，还会得到奖惩值和调整系数，这两个参数用于调整智能体的策略。
+智能体会计算每轮采取的行动的损失值，并通过\textit{backward}方法向后传播给模型，更新模型的参数。
+损失值有三个度量维度，分别为严格性损失(Strict Loss, \ref{con:strictloss})，预测损失(Prediction Loss, \ref{con:rewardloss})
+和均方损失(MSE Loss, \ref{con:mse})，其总和为总损失\ref{con:totalloss}。
+表达式中的$N$表示每次选择的种子数量。
+环境的反馈中给出了调整系数，调整系数是用于调整严格性损失在总体损失中的占比，即为表达式\ref{con:strictloss}中的$\gamma$。严格损失反应智能体的选择是否明确。
+总体损失反应了智能体做出的决策优劣，指导做出下一轮决策。
+\begin{align}
+	&\text{StrictLoss} = - \frac{1}{N} \sum_{i=1}^{N} log\_softmax(\text{action\_distribution}) \cdot \text{sd}_i \cdot \gamma \label{con:strictloss} \\
+	&\text{r} = \left[ \text{f} \cdot \text{discounter}^{n-1}, \ldots , \text{f} \cdot \text{discounter}^1, \text{f} \cdot \text{discounter}^{0} \right] \label{con:r}\\
+	&\text{CELoss}_i = -q_{i} \log(p_{i}) \label{con:celoss} \\
+	&\text{RewardLoss} = \frac{1}{N} \sum_{i=1}^{N} (\text{r}_{i} - \text{r}_{i-1}) \cdot \text{CELoss}_i \label{con:rewardloss} \\
+	&\text{MSELoss} = \frac{1}{N} \sum_{i=1}^{N} (\hat{r}_i - r_i)^2\label{con:mse} \\
+	&\text{Total Loss} = \text{Strict Loss}+\text{RewardLoss}+\text{MSELoss} \label{con:totalloss}
+\end{align}
+
 
 
 \section{非功能模块}
