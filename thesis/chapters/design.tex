@@ -1,38 +1,39 @@
 \chapter{归纳不变式自动生成工具的设计}\label{chap:design}
 
-本章节将介绍\rltla 的具体设计，每个模块的职责和功能。
-
-总体上，工具需要完成一下工作:
+本章节将介绍\rltla 的具体设计，每个模块的职责和功能。总体上，工具需要完成一下工作:
 \begin{itemize}
     \item 解析用户输入，以合适形式的存储并预备后续使用；
     \item 对生成模块所生成的候选不变式检验其正确性、独立性和与候选的归纳不变式的递归性，在检查递归性时还需要生成归纳反例，回传给生成模块；
     \item 生成模块，基于用户输入和检验模块的结果，生成合适的不变式;
     \item 其他非功能模块，包括日志模块，计时模块等；
 \end{itemize}
+系统的输出是对一系列引理不变式的合取范式，对于规约而言，是一个包含 $Safe$ 属性的归纳不变式。
 
-\rltla 的工作流如图\ref{fig:rltla}所示，功能模块主要分为候选不变式生成模块(Invariant Generator)，候选不变式检验模块(TLC/Apalache)两个部分。
-其中候选不变式生成模块接入了强化学习，训练强化模型智能体，以提高候选不变式的生成效率和准确率。
-候选不变式检验模块则接入了TLC或Apalache，对生成的候选不变式进行验证，检验其正确性，独立性和候选归纳不变式的递归性，并将结果返回给生成模块。
-在检验不变式的正确性和归纳不变式的递归性出现错误时，应当返回对应的不变式反例和归纳反例。
-目前系统接受 endive 提供的数据源，使用 endive 中的对规约人工标记的谓词，作为生成候选不变式的种子(seed)。
-系统的输出是对一系列引理不变式的合取范式，对于系统而言，是一个包含 $Safe$ 属性的归纳不变式。
-
+\section{总体设计}
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.7\textwidth]{figures/workflow.pdf}
-    \caption{\rltla -workflow}
+    \caption{\rltla 工作流图}
     \label{fig:rltla}
 \end{figure}
 
+\rltla 的工作流如图\ref{fig:rltla}所示，功能模块主要分为候选不变式生成模块（Invariant Generator），候选不变式检验模块（TLC/Apalache）两个部分。
+其中候选不变式生成模块接入了强化学习，训练强化模型智能体，以提高候选不变式的生成效率和准确率。
+候选不变式检验模块则接入了TLC或Apalache，对生成的候选不变式进行验证，检验其正确性，独立性和候选归纳不变式的递归性，并将结果返回给生成模块。
+在检验不变式的正确性和归纳不变式的递归性出现错误时，应当返回对应的不变式反例和归纳反例。
+目前系统接受 endive 提供的数据源，使用 endive 中的对规约人工标记的谓词，作为生成候选不变式的种子（seed，代码块\ref{lst:config}中preds字段）。
+
+
 \begin{algorithm}[ht]
-    \caption[short]{workflow of \rltla}
+    \caption[short]{\rltla 的工作流}
     \label{alg:rltla-workflow}
+    \SetFuncSty{textsc}
     \SetKwInput{Input}{Input}
     \SetKwInput{Output}{Output}
-    \SetKwFunction{GenIndCTIs}{GenIndCTIs}
-    \SetKwFunction{GenInvCEs}{GenInvCEs}
-    \SetKwFunction{GenNextInv}{GenNextInv}
-    \SetKwFunction{Eliminate}{EliminateCTI}
+    \SetKwFunction{GenIndCTIs}{$\textsc{GenIndCTIs}$}
+    \SetKwFunction{GenInvCEs}{$\textsc{GenInvCEs}$}
+    \SetKwFunction{GenNextInv}{$\textsc{GenNextInv}$}
+    \SetKwFunction{Eliminate}{$\textsc{EliminateCTIs}$}
     \SetKwData{Ind}{$Ind$}
     \SetKwData{Inv}{$Inv$}
     \SetKwData{Module}{$M$}
@@ -49,18 +50,19 @@
     \While{\CTIs \neq $\emptyset$}{
         \Inv \leftarrow \GenNextInv{\Module, \Ind, \CTIs, \CEs} \;
         \CEs \leftarrow \GenInvCEs{\Module, \Ind} \;
-        \If{\CEs \equal $\emptyset$}{ }{
+        \If{\CEs \equal $\emptyset$}{ 
             \If {\Eliminate{\Module, \Inv, \CTIs}}{
                 \Ind \leftarrow \Ind $\wedge$ \Inv \;
                 \CTIs $\leftarrow$ \GenIndCTIs{\Module, \Ind} \;
             }
+        }{  
         }
     }
     \Return{\Ind}
 \end{algorithm}
 
 基本的逻辑结构如算法\ref{alg:rltla-workflow}展示。
-初始化时候，候选的归纳不变式首先合取$Safe$属性，然后基于此生成第一轮的归纳反例(Counterexample to Induction)。
+初始化时候，候选的归纳不变式首先合取$Safe$属性，然后基于此生成第一轮的归纳反例（Counterexample to Induction）。
 在每一轮的迭代中，强化学习系统都会不断地生成一个个候选的引理不变式。
 但只有满足两个条件的，才能被添加到候选归纳不变式中。
 首先是，引理不变式必须，满足在运行的状态空间上是不变式，也就是没有不变式反例CE生成；
@@ -77,6 +79,11 @@
 \end{align}
 和归纳反例不同的是，状态$s$和$s'$都来自规约允许的允许状态，也就是图\ref{fig:ind-cti}中可到达的允许空间里的状态。
 针对一个谓词表达式，只有不存在这样的CE，才能被称为不变式。
+
+因为逻辑复杂，运行时间长，为了开发人员和用户对系统信息可见，需要设计有日志模块，以不同的日志等级记录系统的运行状态。
+日志模块应当在系统运行的每个重要步骤打印具体的运行信息，同时在系统出现运行错误时，打印错误信息，以便开发人员定位错误进行调试。
+
+为了研究和评估系统的性能，需要设计计时模块，记录系统运行的时间，以便于后续的性能分析。同时，需要在循环中记录强化学习模块的特征信息。
 
 \section{候选不变式检验模块}
 
@@ -110,10 +117,11 @@
 
 如果给出的候选不变式不正确，检验模块应当给出不变式反例，以帮助生成模块调整策略，生成正确的候选不变式。
 同样的，如果当前给出的引理不变式的合取结果不是归纳不变式，检验模块还应该返回归纳反例。
-不变式反例和归纳反例有着相似的内容，由两个状态组成，前一个状态满足现有的候选(归纳)不变式，而后一个状态则不满足。
+不变式反例和归纳反例有着相似的内容，由两个状态组成，前一个状态满足现有的候选（归纳）不变式，而后一个状态则不满足。
 
 \section{候选不变式生成模块}
-
+生成模块可以分候选不变式的语法生成的逻辑，以及强化学习框架在生成模块中的应用，两个部分。
+\subsection{候选不变式的语法与生成逻辑}
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.95\textwidth]{figures/eliminate_cti.pdf}
@@ -122,7 +130,7 @@
 \end{figure}
 
 图\ref{fig:eliminate_cti}是一个典型的杀死归纳反例以获得归纳不变式的过程。
-候选的归纳不变式初始化为$Safe$属性，然后基于此生成第一轮的归纳反例(Counterexample to Induction)。
+候选的归纳不变式初始化为$Safe$属性，然后基于此生成第一轮的归纳反例（Counterexample to Induction）。
 以杀死归纳反例为目的，生成模块不断地生成一个个候选的引理不变子式。
 以此迭代，直到没有归纳反例产生，也就是获得了最后的归纳不变式。
 因此，归纳反例对生成归纳不变式有重要的指导作用。
@@ -130,19 +138,19 @@
 尽管接入了强化学习，生成模块的工作形式和传统的归纳不变式生成工作流程类似。
 引理不变式以一阶逻辑谓词的形式存在，首先需要满足在规约的有限实例上保持布尔值为真，其次便是需要杀死一些归纳反例。
 为了找到这些引理不变式，我们使用一种基于语法合成指导的归纳不变式生成技术。
-我们从输入的种子(seed)谓词中，按照强化学习模块的意愿选择一部分种子谓词，并按照语法组合成一个可能的不变式。
+我们从输入的种子（seed）谓词中，按照强化学习模块的意愿选择一部分种子谓词，并按照语法组合成一个可能的不变式。
 每个种子谓词都是针对系统状态变量的布尔表达式。
 当然，我们也有可能采取给出种子谓词的否定，根据\TLA 的语法，我们只需要在给出的谓词前面加上否定符号 \textbf{“\~{}”}即可。
 这部分的决定权交给强化学习模块，强化学习模块会根据当前的状态，选择一个合适的种子谓词，或者它的否定。
 
 一个不变式的语法大致可以表达为：
 \begin{align}
-    <lemma> &: = <quant>:<expr>   \\
-    <quant> &:= \forall x\ \backslash in\ SetA | \exists y\ \backslash in\ SetB \\
-    <expr>  &:= <seed>| \sim<seed> | <seed> \lor <seed>
+    <lemma> &: = <quans>:<expr>   \\
+    <quant> &:= \forall x  \in SetA  \ |\  \exists y  \in SetB \\
+    <expr>  &:= <seed>| \sim<seed> | <seed> \lor <seed> 
 \end{align}
 注意到，我们对于引理不变式内部每个谓词之间的连接方式统一选择了析取符号“$\lor$”。
-这是因为，一方面这种语法在表达归纳不变已经足够完备\cite{or-complete}，
+这是因为，一方面这种语法在表达归纳不变已经足够完备，
 在每个引理不变式内部使用析取计算，对引理不变式之间选择合取计算足够我们表达对于绝大多数规约的归纳不变式；
 另一方面，由于简化了种子谓词之间的逻辑计算方式，不再需要对此分别研究，也可以帮助了我们简化问题，缩小了搜索不变式的空间。
 另外，对于每个引理不变式的量词部分，我们统一使用了直接的输入，不做其他更改。
@@ -151,7 +159,7 @@
 尽管有些时候，可能量词表达式中定义的变量在后面的谓词逻辑表达式中并没有使用，但这不影响生成的结果的布尔值，对于这部分多余的量词定义，可以不做处理。
 
 
-\section{强化学习在生成模块中的应用}
+\subsection{强化学习在生成模块中的应用}
 
 本文的目的是希望研究强化学习在自动的归纳不变式生成过程中的应用。
 强化学习是一种通过智能体和环境的交互，智能体通过观察环境的状态，采取行动，获得奖励，来学习如何在环境中获取最大的奖励。
@@ -177,10 +185,3 @@
 
 环境的状态信息包括候选归纳不变式中已有的引理不变式，归纳反例，种子谓词，以及规约的状态信息，在强化学习给出的候选不变式不正确时，
 也应当给出在哪些状态下，这个候选不变式的布尔值为假，以便于智能体基于错误的候选不变式做出调整。
-
-\section{非功能设计}
-
-因为逻辑复杂，运行时间长，为了开发人员和用户对系统信息可见，需要设计有日志模块，以不同的日志等级记录系统的运行状态。
-日志模块应当在系统运行的每个重要步骤打印具体的运行信息，同时在系统出现运行错误时，打印错误信息，以便开发人员定位错误进行调试。
-
-为了研究和评估系统的性能，需要设计计时模块，记录系统运行的时间，以便于后续的性能分析。同时，需要在循环中记录强化学习模块的特征信息。
