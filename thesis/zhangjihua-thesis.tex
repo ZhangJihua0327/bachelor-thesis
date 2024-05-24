@@ -51,7 +51,7 @@
     对于复杂系统，我们无法像验证简单系统，通过遍历所有状态的方式来验证安全属性。
     已有的研究常常通过生成一个蕴含安全属性的归纳不变式的正确性的方式来验证安全属性的正确性，继而验证规约的正确性。
 
-    自动化地生成分布式协议的归纳不变式是验证自动化分布式协议正确性的关键步骤。
+    自动化地生成分布式协议的归纳不变式是自动化验证分布式协议正确性的关键步骤。
     但是，自动化寻找归纳不变式是一个困难的问题，并且已有的研究主要基于的IVy进行实现，\TLA 语言领域的相关研究较少。
     本文将实现一个面向\TLA 规约的归纳不变式生成工具\rltla ，实现对以\TLA 语言描述的分布式协议规约的归纳不变式的自动化生成。
     与此同时，不同于以往通过优化遍历顺序的方式，本文将使用强化学习的方法，加速归纳不变式的推导过程。
@@ -67,7 +67,7 @@
     For complex systems, we cannot verify the safety property by traversing all states as for simple protocols.
     Existing research often generates the correctness of an inductive invariant that implies the safety property to infer the correctness of the safety property, and then infer the correctness of the protocol.
     
-    Automatic generation of inductive invariants for distributed protocols is a key step in verifying the correctness of automatic distributed protocols.
+    Automatic generation of inductive invariants for distributed protocols is a key step in automatic verifying the correctness of distributed protocols.
     However, automatically finding inductive invariants is a difficult problem, and existing research is mainly based on IVy, with less research in the \TLA language domain.
     This paper will implement an inductive invariant generation tool \rltla for \TLA specifications, to automatically generate inductive invariants for distributed protocol specifications in \TLA language.
     Meanwhile, different from the previous way of optimizing the traversal order, this paper will use reinforcement learning to accelerate the derivation process of inductive invariants.
