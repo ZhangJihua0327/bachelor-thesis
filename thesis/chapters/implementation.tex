@@ -213,8 +213,8 @@ preds 字段下是生成候选不变式的种子(seed)。quants 字段下存储�
 
 \textit{PolicyNetwork}和\textit{RewardPredictor}是具体实现策略和值函数的网络模型。
 \textit{PolicyNetwork}的输入是系统的状态，输出是动作的概率分布。
-它接受了程序的总体特征和seeds的嵌入，得到 action\_vector，再将其放到\textit{Distributionlize} 中进行归一化处理，
-得到概率分布action\_distribution，用来指导seed的选择。
+它接受了环境的总体特征和seeds的嵌入，获得 action\_vector，并在\textit{Distributionlize} 中进行归一化处理，
+得到概率分布action\_distribution，以此作为智能体选择种子的指导。
 \textit{RewardPredictor}在奖励稀疏时十分有用，它将输入的状态向量和整体特征向量进行拼接，经过线性层逐层地提取特征，并把预测的奖励值投影到奖励值范围中，输出reward值。
 在智能体采取行动后，奖励预测器还会根据实际奖励更新自己的参数，以提高奖励预测的准确性。
 本文的奖励值范围是[-10, 10]。
