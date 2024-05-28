@@ -73,9 +73,9 @@ Apalache 对\TLA 源文件的语法中引入了一些限制，
 寻找一个能够蕴含安全属性的不变式，并且能够在所有可能的状态转移后保持其自身的正确性，这个不变式被称为归纳不变式。
 以数学的语言表示为：
 \begin{align}
-    &Init \Rightarrow Ind \label{con:init}\\
-    &Ind \land Next \Rightarrow Ind' \label{con:inductive}\\
-    &Ind \Rightarrow Safe \label{con:safety}
+    &Init \vDash Ind \label{con:init}\\
+    &Ind \land Next \vDash Ind' \label{con:inductive}\\
+    &Ind \vDash Safe \label{con:safety}
 \end{align}
 其中$Init$ 表示初始状态，$Next$ 表示状态转移，$Safe$ 是安全属性，$Ind$ 表达的是归纳不变式，
 而$Ind'$表达谓词$Ind$经过状态转移后的变量的状态。
