@@ -3,7 +3,9 @@
 \section{运行结果}
 
 以{Client\_Server}规约为例， 一个典型的配置文件如下：
-\begin{lstlisting}[label={lst:config},caption={配置文件}]
+\begin{figure}[htb]
+    \centering
+\begin{lstlisting}[]
 {
     "preds"  :  [
         "<<VARR,VARP>> \\in match",
@@ -29,10 +31,13 @@
     "simulate"  :  true      
 }
 \end{lstlisting}
+\caption{Client\_Server 规约配置文件}
+\label{lst:config}
+\end{figure}
 
 \rltla 和endive 使用相同的配置文件。
 
-本文得到的运行数据，包括对endive的运行数据的机器配置如下：
+本文得到的运行数据，包括对endive的运行数据的机器配置如图\ref{lst:config}
 \begin{itemize}
     \item CPU: AMD Ryzen 9 5950X Processor 16C32T @4.6GHz
     \item 内存: 128GB DDR4 
@@ -63,6 +68,16 @@
     \label{tab:result}
 \end{table}
 
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.65\linewidth]{figures/two_phase_ind.pdf}
+    \caption{TwoPhase 规约的一个归纳不变式}
+    \label{fig:two_phase_ind}
+\end{figure}
+图\ref{fig:two_phase_ind}展示了TwoPhase 规约的一个归纳不变式。
+可以看到归纳不变式是由多条引理不变式合取而来，而每个引力不变式又是由多个谓词析取而来。
+除此以外，第一条引理不变式是TwoPhase规约的安全属性。
+
 \section{结果分析}
 对比endive的运行结果，在大多数规约上\rltla 不具有优势。
 \rltla 的主要内存占用为强化学习模型和网络模型的内存占用，endive没有相关的内容。
@@ -87,15 +102,15 @@
 可以看到，强化学习模块在引理不变式生成过程中起到了积极的作用，提高了候选引理不变式的质量。
 在将引理不变式加入到归纳不变式集合中的频率对比随机过程也有所提升。
 以上图表表明，强化学习模块在归纳不变式生成过程中起到了积极的作用，证明了强化学习在归纳不变式自动生成中的可用性。
-\begin{figure}[htb]
+\begin{figure}
     \centering
     \subfloat[引理不变式命中率]{
         \label{fig:inv}
-        \includegraphics[width=0.8\linewidth]{figures/inv.pdf}
+        \includegraphics[width=0.75\linewidth]{figures/inv.pdf}
     }\hfill
     \subfloat[归纳不变式命中率]{
         \label{fig:ind}
-        \includegraphics[width=0.8\linewidth]{figures/ind.pdf}
+        \includegraphics[width=0.75\linewidth]{figures/ind.pdf}
     }\hfill
     \caption{强化学习选择和随机选择的命中率}
     \label{fig:all}

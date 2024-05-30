@@ -33,8 +33,10 @@ TLC 和 Apalache 是两个常见的面向\TLA 规约的模型检查工具(model 
 用户也可以指定使用其他配置文件，以验证从不同状态出发和不同状态转移条件下的用户定义的不变式的成立与否。
 比如说需要验证的不变式，可以放在$\text{INVARIANT}$ 字段下。
 对于一些常量，用户也可以通过配置文件$\text{CONSTANTS}$字段进行定义。
-一个典型的TLC配置文件如下：
-\begin{lstlisting}[caption={TLC 配置文件}]
+一个典型的TLC配置文件如图\ref{lst:tlc_cfg}所示。
+\begin{figure}
+	\centering
+\begin{lstlisting}
 INIT Init
 NEXT Next
 
@@ -51,6 +53,9 @@ r2 = r2
 p1 = p1
 p2 = p2
 \end{lstlisting}
+\caption{TLC 配置文件}
+\label{lst:tlc_cfg}	
+\end{figure}
 我们可以简单的理解为，模型检测器可以判断$\text{INIT} \wedge \text{NEXT} \vDash \text{INVARIANT}$ 是否成立。
 在不成立时，模型检测器会给出一个状态的链接，展示系统状态如何从初始状态转移到不满足不变式的状态。
 
@@ -113,11 +118,13 @@ TLC会以析取范式的形式将各个变量的值表达出来，而Apalache默
 
 CTI类反应的是一个状态，在这个状态下，所有变量的值存储在\textit{cti\_str}字段中。
 从这个状态出发，系统可以运行一个状态，这个状态下，给出的候选归纳不变式不成立。
-一个TLC输出的错误轨迹如代码段\ref{lst:cti_cmd}。
+一个TLC输出的错误轨迹如图\ref{lst:cti_cmd}。
 其中(State\ 1, State\ 2)就是图\ref{fig:ind-cti}的一个归纳反例，CTI类存储的是State\ 1的状态信息，cti.action\_name 对应于ReceiveResponse,
 cti.cti\_str存储的是State\ 1的状态信息。
 
-\begin{lstlisting}[caption={反例的命令行输出}, label={lst:cti_cmd}]
+\begin{figure}
+	
+\begin{lstlisting}
 Simulation using seed 4257 and aril 0
 Error: Invariant InvStrengthened is violated.
 Error: The behavior up to this point is:
@@ -133,6 +140,9 @@ State 2: <ReceiveResponse line 31, col 5 to line 33, col 53 of module client_ser
 /\ response_received = {<<n1, p2>>, <<n2, p2>>}
 /\ response_sent = {<<n1, p1>>, <<n1, p2>>, <<n2, p1>>, <<n3, p1>>}	
 \end{lstlisting}
+\caption{反例的命令行输出}
+\label{lst:cti_cmd}
+\end{figure}
 
 CE类有着和CTI类相似的结构，不同的是，CE类更关注那个使得不变式不成立的状态。
 CE类对应的状态都是系统正常运行时可达的状态，而CTI类对应的状态是则全部不是系统正常运行时可达的状态。
