@@ -2,8 +2,7 @@
     type = bachelor,
     degree = academic,
     twoside,
-    fontset = win,
-    decl-page
+    fontset = win
 ]
 {njuthesis}
 
@@ -23,6 +22,7 @@
 \usepackage{amsmath}
 \usepackage{courier}
 \usepackage{multirow}
+\usepackage{pdfpages}
 
 \lstset{
 	frame=single,
@@ -44,6 +44,7 @@
 \begin{document}
 % 封面
 \maketitle
+\includepdf[pages={1,{}}]{figures/decl-page.pdf}
 
 \begin{abstract}
     分布式协议以及分布式系统，在当今的计算机世界不可或缺。自动化地对分布式协议验证其正确性是一个重要且困难的挑战。
