@@ -82,16 +82,36 @@
     publisher = {Springer}
 }
 
-@article{garg2016learning,
-    title     = {Learning invariants using decision trees and implication counterexamples},
-    author    = {Garg, Pranav and Neider, Daniel and Madhusudan, Parthasarathy and Roth, Dan},
-    journal   = {ACM Sigplan Notices},
-    volume    = {51},
-    number    = {1},
-    pages     = {499--512},
-    year      = {2016},
-    publisher = {ACM New York, NY, USA}
+% @article{garg2016learning,
+%     title     = {Learning invariants using decision trees and implication counterexamples},
+%     author    = {Garg, Pranav and Neider, Daniel and Madhusudan, Parthasarathy and Roth, Dan},
+%     journal   = {ACM Sigplan Notices},
+%     volume    = {51},
+%     number    = {1},
+%     pages     = {499--512},
+%     year      = {2016},
+%     publisher = {ACM New York, NY, USA}
 }
+@inproceedings{garg2016learning,
+author = {Garg, Pranav and Neider, Daniel and Madhusudan, P. and Roth, Dan},
+title = {Learning invariants using decision trees and implication counterexamples},
+year = {2016},
+isbn = {9781450335492},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2837614.2837664},
+doi = {10.1145/2837614.2837664},
+abstract = {Inductive invariants can be robustly synthesized using a learning model where the teacher is a program verifier who instructs the learner through concrete program configurations, classified as positive, negative, and implications. We propose the first learning algorithms in this model with implication counter-examples that are based on machine learning techniques. In particular, we extend classical decision-tree learning algorithms in machine learning to handle implication samples, building new scalable ways to construct small decision trees using statistical measures. We also develop a decision-tree learning algorithm in this model that is guaranteed to converge to the right concept (invariant) if one exists. We implement the learners and an appropriate teacher, and show that the resulting invariant synthesis is efficient and convergent for a large suite of programs.},
+booktitle = {Proceedings of the 43rd Annual ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages},
+pages = {499–512},
+numpages = {14},
+keywords = {ICE learning, Invariant synthesis, decision trees, machine learning},
+location = {St. Petersburg, FL, USA},
+series = {POPL '16}
+}
+
+
+
 
 @inproceedings{goel2019model,
     title        = {Model checking of verilog rtl using ic3 with syntax-guided abstraction},

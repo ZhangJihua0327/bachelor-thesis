@@ -26,7 +26,7 @@ TLC 和 Apalache 是两个常见的面向\TLA 规约的模型检查工具(model 
 
 在检验候选的不变式和归纳不变式时，如果出现反例，无论是对候选不变式的反例，还是对归纳不变式的归纳反例，都应该提取出来，返回给生成模块。
 
-\subsection{model checker的配置文件和运行选项}
+\subsection{模型检查器的配置文件和运行选项}
 
 对于图\ref{fig:client_server}中的规约，TLC 和 Apalache 会使用默认的配置文件进行验证，
 即以 $\text{INIT}$为初始状态，$\text{NEXT}$ 为状态转移关系，在状态变化的过程中验证 $\text{Safe}$ 安全属性的正确性。
@@ -94,7 +94,7 @@ p2 = p2
 由于我们的目的是检验不变式的一些性质，所以我们不需要检验死锁，并选择了这一选项。
 \textbf{"-continue"}选项揭示了TLC在检测出错误后是否继续运行，为了得到更多的反例，我们需要使用这个选项。
 
-\subsection{model checker 的调用和结果解析}
+\subsection{模型检查器的调用和结果解析}
 本项目的代码主要基于Python实现，然而不论是TLC还是Apalache，都是Java实现的模型检查器，且没有可以直接调用的Python接口。
 因此，我们需要通过Python的subprocess库来调用Java程序，并通过解析Java程序的命令行输出结果来获取验证结果。
 在验证不同性质的时候指定好不同的配置文件并调整好不用的运行参数。

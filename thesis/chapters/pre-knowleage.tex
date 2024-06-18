@@ -10,7 +10,7 @@
 \end{figure}
 
 \section{\texorpdfstring{TLA\textsuperscript{+}与TLC}{TLA+与TLC}}
-\subsection{\texorpdfstring{TLA\textsuperscript{+}}{TLA+}}
+\subsection{\texorpdfstring{TLA\textsuperscript{+}形式规约语言}{TLA+形式规约语言}}
 \href{https://lamport.azurewebsites.net/tla/tla.html}{\TLA} \cite{TLA+}是由计算机科学家 Leslie Lamport 主导开发的，基于时许逻辑TLA（temporal logic of actions）\cite{temporal}的，
 在对计算机程序和系统建模，尤其是对并行系统和分布式系统建模具有广泛应用\cite{PaxosStore}的一种高级语言。
 它是基于使用简单的数学语言来精确描述系统行为的理念开发的。
@@ -41,7 +41,7 @@ tex 用于将\TLA 美化打印的工具等，这些工具与本文所讨论的�
 
 本文所述工具只接受\TLA 的规约。
 
-\subsection{TLC}\label{sec:tlc-apalache}
+\subsection{TLC模型检查器}\label{sec:tlc-apalache}
 TLC既是对\TLA 规约的模型检查工具，也是一个面向规约的模拟器。
 它是一个显式状态模型检查器，依照用户给出的规约和设置，搜索所有满足约束的状态和状态转移，
 并在这个过程中检查安全属性和其他用户定义的谓词逻辑时时是否成立。
@@ -86,13 +86,13 @@ Apalache 对\TLA 源文件的语法中引入了一些限制，
 这是我们寻找一个这样的归纳不变式的目的，通过归纳不变式的正确性验证安全属性的正确性。
 这是归纳不变式所必须满足的三个条件。
 
+对于\textit{Client\_Server} 规约，表达式\ref{con:candidate_ind}是一个可能的归纳不变式。
 \begin{align}
     &\left.A_{1} \triangleq \forall s \in  { Server }: \forall c \in  { Client }:  { locked }[s] \Rightarrow(s \notin { held }[c])\right) \\
     &{ Ind } \triangleq  { Safe } \wedge A_{1} \label{con:candidate_ind}
 \end{align}
 
-对于\textit{Client\_Server} 规约，表达式\ref{con:candidate_ind}是一个可能的归纳不变式。
-可以看到的是，$Ind$是由$Safe$和$A_{1}$两个谓词逻辑表达式合取组成而来。
+总结归纳不变式的特征，$Ind$是由$Safe$和$A_{1}$两个谓词逻辑表达式合取组成而来。
 事实上，大部分规约的归纳不变式都可以表达为$Ind \triangleq Safe \wedge A_1 \wedge A_2 \wedge... \wedge A_n$的形式。
 其中合取子式$A_k$是约束状态的谓词，我们将之称为引理不变式（Lemma Invariant）。
 因为归纳不变式$Ind$是由这些引理不变式$A_k$组合而成的，也就是说，归纳不变式强于每一个引理不变式。
