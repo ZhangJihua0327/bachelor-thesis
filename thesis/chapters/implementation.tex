@@ -233,6 +233,8 @@ preds 字段下是生成候选不变式的种子(seed)。quants 字段下存储�
 action\_vector对应于对种子的选择。强化学习智能体选择好种子，然后交给Seed2Lemma模块，组合上量词，从而生成候选不变式。每个种子都会取其本身和取其否定并组成多个候选不变式。
 这里不需要智能体选择种子或其否定，主要为了降低智能体处理问题的难度。
 
+智能体在采取每个行动后，除了得到环境的状态信息，包括反例或者归纳反例和候选归纳不变式的状态，还会得到奖惩值和调整系数，这两个参数用于调整智能体的策略。
+智能体会计算每轮采取的行动的损失值，并通过\textit{backward}方法向后传播给模型，更新模型的参数。
 \begin{align}
 	&\text{StrictLoss} = - \frac{1}{N} \sum_{i=1}^{N} log\_softmax(\text{action\_distribution}) \cdot \text{sd}_i \cdot \gamma \label{con:strictloss} \\
 	&\text{r} = \left[ \text{f} \cdot \text{discounter}^{n-1}, \ldots , \text{f} \cdot \text{discounter}^1, \text{f} \cdot \text{discounter}^{0} \right] \label{con:r}\\
@@ -242,8 +244,6 @@ action\_vector对应于对种子的选择。强化学习智能体选择好种子
 	&\text{Total Loss} = \text{Strict Loss}+\text{RewardLoss}+\text{MSELoss} \label{con:totalloss}
 \end{align}
 
-智能体在采取每个行动后，除了得到环境的状态信息，包括反例或者归纳反例和候选归纳不变式的状态，还会得到奖惩值和调整系数，这两个参数用于调整智能体的策略。
-智能体会计算每轮采取的行动的损失值，并通过\textit{backward}方法向后传播给模型，更新模型的参数。
 损失值有三个度量维度，分别为严格性损失(Strict Loss, \ref{con:strictloss})，预测损失(Prediction Loss, \ref{con:rewardloss})
 和均方损失(MSE Loss, \ref{con:mse})，其总和为总损失\ref{con:totalloss}。
 表达式中，$\text{N}$表示每次选择的种子数量 $\text{sd}_i$表示每个种子被选择的概率分布。

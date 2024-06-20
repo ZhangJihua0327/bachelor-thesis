@@ -35,6 +35,7 @@
 \label{lst:config}
 \end{figure}
 
+
 \rltla 和endive 使用相同的配置文件。
 
 本文得到的运行数据，包括对endive的运行数据的机器配置如图\ref{lst:config}
@@ -69,6 +70,12 @@
     \end{tabular}
     \label{tab:result}
 \end{table}
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.65\linewidth]{figures/simple_election_ind.pdf}
+    \caption{Simple\_Election 规约的一个归纳不变式}
+    \label{fig:two_phase_ind}
+\end{figure}
 
 \begin{figure}[!htb]
     \centering
@@ -103,7 +110,7 @@
 可以看到，强化学习模块在引理不变式生成过程中起到了积极的作用，提高了候选引理不变式的质量。
 在将引理不变式加入到归纳不变式集合中的频率对比随机过程也有所提升。
 以上图表表明，强化学习模块在归纳不变式生成过程中起到了积极的作用，证明了强化学习在归纳不变式自动生成中的可用性。
-\begin{figure}
+\begin{figure}[h]
     \centering
     \subfloat[引理不变式命中率]{
         \label{fig:inv}
