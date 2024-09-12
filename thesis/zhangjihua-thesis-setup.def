@@ -10,6 +10,7 @@
     grade = {2020},
     student-id = {201250040},
     department = {软件学院},
+    department* = {Software Institute},
     major = {软件工程},
     major* = {Software Engineering},
     supervisor = {魏恒峰,助理研究员},
